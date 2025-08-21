@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Prêmio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="max-w-6xl mx-auto p-6">
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-4">
+                <button onclick="window.history.back()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H15a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                    </svg>
+                    Voltar
+                </button>
+                <h1 class="text-3xl font-bold text-gray-800">Detalhes do Prêmio</h1>
+            </div>
+            <div class="flex gap-2">
+                <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors" onclick="alert('Funcionalidade de editar não implementada.')">
+                    Editar Prêmio
+                </button>
+            </div>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 space-y-6">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="mb-4">
+                        <h2 class="text-2xl md:text-3xl font-bold text-blue-600" id="nomePremio"></h2>
+                        <div class="flex items-center gap-3 mt-2">
+                            <span class="text-lg text-gray-700" id="anoEdicaoHeader"></span>
+                            <span id="statusPremioBadge" class="px-3 py-1 rounded-full text-sm font-semibold"></span>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2 border-b pb-2">Descrição</h3>
+                        <p class="text-gray-600 leading-relaxed" id="descricaoPremio"></p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-semibold text-gray-700 mb-4 border-b pb-2">Cronograma da Edição</h3>
+                    <div class="space-y-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center">
+                            <strong class="w-full sm:w-1/3 text-gray-600 mb-1 sm:mb-0">Data de Início:</strong>
+                            <span class="text-gray-800" id="dataInicioCronograma"></span>
+                        </div>
+                        <div class="flex flex-col sm:flex-row sm:items-center">
+                            <strong class="w-full sm:w-1/3 text-gray-600 mb-1 sm:mb-0">Data de Fim:</strong>
+                            <span class="text-gray-800" id="dataFimCronograma"></span>
+                        </div>
+                         <div class="flex flex-col">
+                            <strong class="text-gray-600 mb-1">Duração Total Estimada:</strong>
+                            <span class="text-gray-800" id="duracaoTotal"></span>
+                        </div>
+                        <div>
+                            <strong class="block text-gray-600 mb-1">Detalhes das Fases:</strong>
+                            <div class="bg-gray-50 p-3 rounded-md text-gray-700 whitespace-pre-wrap" id="detalhesCronograma">
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Resumo</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Ano da Edição:</span>
+                            <span class="font-semibold text-gray-800" id="anoEdicaoSidebar"></span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Status Atual:</span>
+                            <span class="font-semibold" id="statusPremioSidebar"></span>
+                        </div>
+                         <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Período:</span>
+                            <span class="font-semibold text-gray-800 text-sm" id="periodoSidebar"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Ações Relacionadas</h3>
+                    <div class="space-y-3">
+                        <button class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition-colors text-sm" onclick="alert('Funcionalidade: Ver projetos inscritos (Não implementado)')">
+                            Ver Projetos Inscritos
+                        </button>
+                        <button class="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded-lg transition-colors text-sm" onclick="alert('Funcionalidade: Gerar relatório do prêmio (Não implementado)')">
+                            Gerar Relatório
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simula a data atual para consistência nos exemplos.
+        const CURRENT_DATE_FOR_STATUS = new Date("2025-05-22T00:00:00.000-03:00");
+
+        // Dados de exemplo do prêmio (em uma aplicação real, viria do backend via ID)
+        const premioExemplo = {
+            id: 1,
+            nome: "Prêmio Inovação Tech",
+            descricao: "Um prêmio de grande prestígio dedicado a reconhecer e celebrar as mais significativas e disruptivas inovações tecnológicas desenvolvidas ao longo do último ano. Buscamos projetos que demonstrem originalidade, impacto potencial e excelência técnica em diversas áreas da tecnologia.",
+            cronograma: { 
+                dataInicio: "2025-03-01", 
+                dataFim: "2025-10-31", 
+                descricaoDetalhada: "Fase de Inscrições: 01/03/2025 a 30/04/2025\nPeríodo de Avaliação Inicial: 01/05/2025 a 31/07/2025\nAnúncio dos Finalistas: 15/08/2025\nAvaliação Final e Entrevistas: 01/09/2025 a 30/09/2025\nCerimônia de Premiação: 31/10/2025"
+            },
+            anoEdicao: 2025
+        };
+
+        function getPremioStatus(premioObj, dataReferencia) {
+            const hoje = new Date(dataReferencia.toDateString()); // Normaliza para ignorar horas
+            const inicio = new Date(new Date(premioObj.cronograma.dataInicio).toDateString());
+            const fim = new Date(new Date(premioObj.cronograma.dataFim).toDateString());
+
+            if (hoje < inicio) return { texto: "Futuro", classe: "bg-blue-100 text-blue-800" };
+            if (hoje >= inicio && hoje <= fim) return { texto: "Em Andamento", classe: "bg-green-100 text-green-800" };
+            return { texto: "Encerrado", classe: "bg-red-100 text-red-800" };
+        }
+
+        function formatarData(dataString) {
+            if (!dataString) return 'N/A';
+            const data = new Date(dataString + 'T00:00:00'); // Adiciona T00:00:00 para tratar como local
+            return data.toLocaleDateString('pt-BR');
+        }
+        
+        function calcularDuracao(dataInicioStr, dataFimStr) {
+            if (!dataInicioStr || !dataFimStr) return 'N/A';
+            const inicio = new Date(dataInicioStr);
+            const fim = new Date(dataFimStr);
+            if (isNaN(inicio) || isNaN(fim) || fim < inicio) return 'N/A';
+
+            const diffTime = Math.abs(fim - inicio);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 para incluir o dia de início e fim
+            
+            if (diffDays < 30) {
+                return `${diffDays} dia(s)`;
+            } else {
+                const diffMonths = Math.floor(diffDays / 30);
+                const remainingDays = diffDays % 30;
+                let result = `${diffMonths} mês(es)`;
+                if (remainingDays > 0) {
+                    result += ` e ${remainingDays} dia(s)`;
+                }
+                return result;
+            }
+        }
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Em uma aplicação real, você pegaria o ID da URL e buscaria os dados do prêmio.
+            // Ex: const urlParams = new URLSearchParams(window.location.search);
+            // const premioId = urlParams.get('id');
+            // fetchPremioData(premioId).then(premioData => { /* ... popular página ... */ });
+            
+            const premio = premioExemplo; // Usando dados de exemplo
+
+            document.getElementById('nomePremio').textContent = premio.nome;
+            document.getElementById('anoEdicaoHeader').textContent = `Edição ${premio.anoEdicao}`;
+            document.getElementById('descricaoPremio').textContent = premio.descricao;
+
+            const statusInfo = getPremioStatus(premio, CURRENT_DATE_FOR_STATUS);
+            const statusBadge = document.getElementById('statusPremioBadge');
+            statusBadge.textContent = statusInfo.texto;
+            statusBadge.className = `${statusInfo.classe} px-3 py-1 rounded-full text-sm font-semibold`;
+
+            document.getElementById('dataInicioCronograma').textContent = formatarData(premio.cronograma.dataInicio);
+            document.getElementById('dataFimCronograma').textContent = formatarData(premio.cronograma.dataFim);
+            document.getElementById('detalhesCronograma').textContent = premio.cronograma.descricaoDetalhada || 'Nenhum detalhe adicional fornecido.';
+            document.getElementById('duracaoTotal').textContent = calcularDuracao(premio.cronograma.dataInicio, premio.cronograma.dataFim);
+
+
+            // Sidebar
+            document.getElementById('anoEdicaoSidebar').textContent = premio.anoEdicao;
+            document.getElementById('statusPremioSidebar').textContent = statusInfo.texto;
+            document.getElementById('statusPremioSidebar').className = `font-semibold ${statusInfo.classe.replace('bg-', 'text-').replace('-100', '-800')}`; // Ajuste para texto
+            document.getElementById('periodoSidebar').textContent = `${formatarData(premio.cronograma.dataInicio)} - ${formatarData(premio.cronograma.dataFim)}`;
+        });
+    </script>
+</body>
+</html>

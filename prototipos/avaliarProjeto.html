@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliar Projeto</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-6">
+    <div class="max-w-4xl mx-auto">
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center gap-4">
+                <button onclick="window.history.back()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H15a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                    </svg>
+                    Voltar
+                </button>
+                <h1 class="text-3xl font-bold text-gray-800">Avaliar Projeto</h1>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-2xl font-semibold text-blue-600 mb-3" id="infoTituloProjeto"></h2>
+            <div class="space-y-2 text-sm text-gray-700">
+                <p><strong>Área Temática:</strong> <span id="infoAreaTematica"></span></p>
+                <p><strong>Prêmio Concorrendo:</strong> <span id="infoPremioConcorrendo"></span></p>
+                <p><strong>Autores:</strong> <span id="infoAutores"></span></p>
+                <div>
+                    <strong>Resumo:</strong>
+                    <p class="mt-1 text-gray-600 bg-gray-50 p-3 rounded-md max-h-32 overflow-y-auto" id="infoResumo"></p>
+                </div>
+                 <p class="mt-2"><strong>Status Atual do Projeto:</strong> <span id="infoStatusProjeto" class="font-semibold"></span></p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6 md:p-8">
+            <form id="formAvaliacaoProjeto">
+                <input type="hidden" id="projetoIdHidden" name="projetoIdHidden">
+
+                <div class="space-y-6">
+                    <div>
+                        <label for="selectAvaliador" class="block text-sm font-medium text-gray-700 mb-1">Avaliador <span class="text-red-500">*</span></label>
+                        <select id="selectAvaliador" name="selectAvaliador" required
+                                class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="" disabled selected>Selecione o avaliador...</option>
+                            </select>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="notaAvaliacao" class="block text-sm font-medium text-gray-700 mb-1">Nota (0 a 10) <span class="text-red-500">*</span></label>
+                            <input type="number" id="notaAvaliacao" name="notaAvaliacao" min="0" max="10" step="0.1" required
+                                   class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                             <label for="selectRecomendacao" class="block text-sm font-medium text-gray-700 mb-1">Recomendação <span class="text-red-500">*</span></label>
+                            <select id="selectRecomendacao" name="selectRecomendacao" required
+                                    class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="" disabled selected>Selecione uma recomendação...</option>
+                                <option value="Aprovado">Aprovar</option>
+                                <option value="Aprovado com Ressalvas">Aprovar com Ressalvas</option>
+                                <option value="Rejeitado">Rejeitar</option>
+                                <option value="Necessita Revisão">Necessita Revisão / Mais Informações</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="parecerAvaliacao" class="block text-sm font-medium text-gray-700 mb-1">Parecer Descritivo <span class="text-red-500">*</span></label>
+                        <textarea id="parecerAvaliacao" name="parecerAvaliacao" rows="6" required
+                                  class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                  placeholder="Detalhe os pontos fortes, fracos e sugestões para o projeto..."></textarea>
+                    </div>
+                    
+                    <div>
+                        <label for="dataAvaliacao" class="block text-sm font-medium text-gray-700 mb-1">Data da Avaliação</label>
+                        <input type="date" id="dataAvaliacao" name="dataAvaliacao" readonly
+                               class="shadow-sm bg-gray-100 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-end gap-3">
+                    <button type="button" onclick="cancelarAvaliacao()"
+                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition-colors">
+                        Cancelar
+                    </button>
+                    <button type="submit"
+                            class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+                        Submeter Avaliação
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Data atual para a avaliação (Quinta-feira, 22 de Maio de 2025)
+        const DATA_ATUAL_AVALIACAO = "2025-05-22";
+
+        // --- DADOS DE EXEMPLO (simulando busca de um backend) ---
+        const projetoParaAvaliar = {
+            id: 101,
+            titulo: "Sistema Inteligente de Irrigação Urbana",
+            areaTematica: "Tecnologia e Sustentabilidade",
+            resumo: "Um sistema IoT para otimizar o uso de água em jardins e parques urbanos, utilizando sensores e IA para irrigação precisa e eficiente, contribuindo para a conservação hídrica e a manutenção de áreas verdes em grandes cidades.",
+            autores: [ { id: 1, nome: "João Carlos Silva" }, { id: 6, nome: "Luciana Barbosa Mendes" } ],
+            dataEnvio: "2025-04-15",
+            statusProjeto: "Em Avaliação",
+            premiosAssociados: [ { premioId: 1, nomePremio: "Prêmio Inovação Tech 2025" } ]
+        };
+
+        const avaliadoresDisponiveis = [
+            { id: 1, nome: "Dra. Ana Silva Santos (USP)"},
+            { id: 2, nome: "Dr. Carlos Pereira Lima (IFP)"},
+            { id: 3, nome: "Profa. Beatriz Costa Alves (Faculdade ABC)"},
+            { id: 4, nome: "Dr. Fernando Martins Oliveira (CPA)" }
+        ];
+        // --- FIM DADOS DE EXEMPLO ---
+
+        function formatarListaNomes(arrayDeObjetos) {
+            if (!arrayDeObjetos || arrayDeObjetos.length === 0) return 'N/A';
+            return arrayDeObjetos.map(item => item.nome).join(', ');
+        }
+
+        function carregarInformacoesProjeto() {
+            // Em uma app real, o ID do projeto viria da URL, ex: ?projetoId=101
+            const projeto = projetoParaAvaliar; // Usando dados de exemplo
+
+            document.getElementById('infoTituloProjeto').textContent = projeto.titulo;
+            document.getElementById('infoAreaTematica').textContent = projeto.areaTematica;
+            document.getElementById('infoPremioConcorrendo').textContent = projeto.premiosAssociados && projeto.premiosAssociados.length > 0 ? formatarListaNomes(projeto.premiosAssociados) : 'Nenhum';
+            document.getElementById('infoAutores').textContent = formatarListaNomes(projeto.autores);
+            document.getElementById('infoResumo').textContent = projeto.resumo;
+            document.getElementById('infoStatusProjeto').textContent = projeto.statusProjeto;
+            document.getElementById('projetoIdHidden').value = projeto.id;
+        }
+
+        function popularSelectAvaliadores() {
+            const select = document.getElementById('selectAvaliador');
+            avaliadoresDisponiveis.forEach(avaliador => {
+                const option = document.createElement('option');
+                option.value = avaliador.id;
+                option.textContent = avaliador.nome;
+                select.appendChild(option);
+            });
+        }
+
+        function setDataAvaliacao() {
+            document.getElementById('dataAvaliacao').value = DATA_ATUAL_AVALIACAO;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarInformacoesProjeto();
+            popularSelectAvaliadores();
+            setDataAvaliacao();
+        });
+
+        document.getElementById('formAvaliacaoProjeto').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const projetoId = document.getElementById('projetoIdHidden').value;
+            const avaliadorId = document.getElementById('selectAvaliador').value;
+            const avaliadorNome = document.getElementById('selectAvaliador').selectedOptions[0].text;
+            const nota = document.getElementById('notaAvaliacao').value;
+            const recomendacao = document.getElementById('selectRecomendacao').value;
+            const parecer = document.getElementById('parecerAvaliacao').value;
+            const dataAvaliacao = document.getElementById('dataAvaliacao').value;
+
+            if (!avaliadorId || !nota || !recomendacao || !parecer) {
+                alert('Por favor, preencha todos os campos obrigatórios da avaliação: Avaliador, Nota, Recomendação e Parecer.');
+                return;
+            }
+            
+            const avaliacao = {
+                projetoId: parseInt(projetoId),
+                avaliador: { 
+                    id: parseInt(avaliadorId),
+                    nome: avaliadorNome
+                },
+                nota: parseFloat(nota),
+                recomendacao: recomendacao,
+                parecer: parecer,
+                dataAvaliacao: dataAvaliacao
+            };
+
+            console.log('Avaliação a ser submetida:', avaliacao);
+            alert(`Avaliação do projeto "${projetoParaAvaliar.titulo}" pelo avaliador "${avaliadorNome}" submetida com sucesso!\nNota: ${nota}\nRecomendação: ${recomendacao}\n(Em uma aplicação real, estes dados seriam enviados para o servidor e o status do projeto poderia ser atualizado.)`);
+            
+            // Opcional: Limpar formulário ou redirecionar
+            // event.target.reset();
+            // setDataAvaliacao(); 
+            // document.getElementById('selectAvaliador').selectedIndex = 0;
+            // document.getElementById('selectRecomendacao').selectedIndex = 0;
+            // alert('Redirecionando para a lista de projetos...');
+            // window.location.href = 'listar_projetos.html'; // Exemplo
+        });
+
+        function cancelarAvaliacao() {
+            if (confirm('Tem certeza que deseja cancelar a avaliação? Os dados não salvos serão perdidos.')) {
+                document.getElementById('formAvaliacaoProjeto').reset();
+                setDataAvaliacao();
+                 document.getElementById('selectAvaliador').selectedIndex = 0; // Reseta o placeholder
+                 document.getElementById('selectRecomendacao').selectedIndex = 0;
+            }
+        }
+    </script>
+</body>
+</html>

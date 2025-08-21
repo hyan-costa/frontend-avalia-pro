@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listar Autores</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .modal {
+            display: none;
+        }
+        .modal.active {
+            display: flex;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">Lista de Autores</h1>
+            <button onclick="window.location.href='criarAutor.html'" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors">
+                + Novo Autor
+            </button>
+        </div>
+        
+        <!-- Filtros -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Filtros</h2>
+            <div class="grid md:grid-cols-4 gap-4">
+                <input 
+                    type="text" 
+                    id="filtroNome"
+                    placeholder="Filtrar por nome" 
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500">
+                
+                <input 
+                    type="text" 
+                    id="filtroInstituicao"
+                    placeholder="Filtrar por instituição" 
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500">
+                
+                <select id="filtroProjetos" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline focus:border-blue-500">
+                    <option value="">Todos os níveis de projetos</option>
+                    <option value="0">Sem projetos</option>
+                    <option value="1-3">1 a 3 projetos</option>
+                    <option value="4-6">4 a 6 projetos</option>
+                    <option value="7+">7 ou mais projetos</option>
+                </select>
+                
+                <select id="filtroStatus" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline focus:border-blue-500">
+                    <option value="">Todos os status</option>
+                    <option value="ativo">Ativo</option>
+                    <option value="inativo">Inativo</option>
+                </select>
+            </div>
+            <div class="mt-4">
+                <button id="limparFiltros" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+                    Limpar Filtros
+                </button>
+            </div>
+        </div>
+
+        <!-- Contador de resultados -->
+        <div class="mb-4">
+            <span id="contadorResultados" class="text-gray-700 font-medium"></span>
+        </div>
+        
+        <!-- Tabela -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full border-collapse">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Nome Completo</th>
+                            <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">E-mail</th>
+                            <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Instituição</th>
+                            <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Projetos</th>
+                            <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Pontuação Média</th>
+                            <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Status</th>
+                            <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaAutores">
+                        <!-- Dados serão inseridos via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Paginação -->
+        <div class="flex justify-between items-center mt-6">
+            <span id="infoPaginacao" class="text-gray-700"></span>
+            <div class="flex gap-2">
+                <button id="btnAnterior" class="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-bold py-2 px-4 rounded-l transition-colors">
+                    Anterior
+                </button>
+                <span id="numeroPagina" class="bg-gray-200 px-4 py-2 font-medium text-gray-700"></span>
+                <button id="btnProximo" class="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-bold py-2 px-4 rounded-r transition-colors">
+                    Próximo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dados dos autores
+        const autores = [
+            {
+                id: 1,
+                nome: "João Carlos Silva",
+                email: "joao.silva@universidade.edu.br",
+                cpf: "123.456.789-01",
+                telefone: "(11) 98765-4321",
+                instituicao: "Universidade de São Paulo",
+                projetos: 5,
+                pontuacaoMedia: 8.2,
+                status: "ativo"
+            },
+            {
+                id: 2,
+                nome: "Maria Fernanda Santos",
+                email: "maria.santos@instituto.gov.br",
+                cpf: "234.567.890-12",
+                telefone: "(21) 97654-3210",
+                instituicao: "Instituto Federal do Rio de Janeiro",
+                projetos: 3,
+                pontuacaoMedia: 7.8,
+                status: "ativo"
+            },
+            {
+                id: 3,
+                nome: "Pedro Henrique Oliveira",
+                email: "pedro.oliveira@escola.edu.br",
+                cpf: "345.678.901-23",
+                telefone: "(31) 96543-2109",
+                instituicao: "Escola Técnica de Minas Gerais",
+                projetos: 8,
+                pontuacaoMedia: 9.1,
+                status: "ativo"
+            },
+            {
+                id: 4,
+                nome: "Ana Clara Costa",
+                email: "ana.costa@faculdade.com.br",
+                cpf: "456.789.012-34",
+                telefone: "(41) 95432-1098",
+                instituicao: "Faculdade de Tecnologia do Paraná",
+                projetos: 2,
+                pontuacaoMedia: 6.5,
+                status: "inativo"
+            },
+            {
+                id: 5,
+                nome: "Roberto Lima Pereira",
+                email: "roberto.pereira@centro.org.br",
+                cpf: "567.890.123-45",
+                telefone: "(51) 94321-0987",
+                instituicao: "Centro Universitário do Sul",
+                projetos: 6,
+                pontuacaoMedia: 8.7,
+                status: "ativo"
+            },
+            {
+                id: 6,
+                nome: "Luciana Barbosa Mendes",
+                email: "luciana.mendes@tech.edu.br",
+                cpf: "678.901.234-56",
+                telefone: "(85) 93210-9876",
+                instituicao: "Instituto de Tecnologia do Ceará",
+                projetos: 4,
+                pontuacaoMedia: 7.3,
+                status: "ativo"
+            },
+            {
+                id: 7,
+                nome: "Carlos Eduardo Rocha",
+                email: "carlos.rocha@universidade.br",
+                cpf: "789.012.345-67",
+                telefone: "(61) 92109-8765",
+                instituicao: "Universidade de Brasília",
+                projetos: 9,
+                pontuacaoMedia: 8.9,
+                status: "ativo"
+            },
+            {
+                id: 8,
+                nome: "Patricia Alves Campos",
+                email: "patricia.campos@instituto.edu.br",
+                cpf: "890.123.456-78",
+                telefone: "(71) 91098-7654",
+                instituicao: "Instituto Federal da Bahia",
+                projetos: 1,
+                pontuacaoMedia: 5.8,
+                status: "inativo"
+            },
+            {
+                id: 9,
+                nome: "André Luiz Santos",
+                email: "andre.santos@faculdade.br",
+                cpf: "901.234.567-89",
+                telefone: "(83) 90987-6543",
+                instituicao: "Faculdade de Ciências da Paraíba",
+                projetos: 7,
+                pontuacaoMedia: 8.4,
+                status: "ativo"
+            },
+            {
+                id: 10,
+                nome: "Fernanda Silva Oliveira",
+                email: "fernanda.oliveira@centro.com.br",
+                cpf: "012.345.678-90",
+                telefone: "(82) 89876-5432",
+                instituicao: "Centro de Ensino de Alagoas",
+                projetos: 0,
+                pontuacaoMedia: 0,
+                status: "ativo"
+            },
+            {
+                id: 11,
+                nome: "Ricardo Mendes Lima",
+                email: "ricardo.lima@universidade.edu.br",
+                cpf: "135.246.789-01",
+                telefone: "(47) 88765-4321",
+                instituicao: "Universidade Regional de Santa Catarina",
+                projetos: 5,
+                pontuacaoMedia: 7.9,
+                status: "ativo"
+            },
+            {
+                id: 12,
+                nome: "Juliana Costa Pereira",
+                email: "juliana.pereira@instituto.br",
+                cpf: "246.357.890-12",
+                telefone: "(65) 87654-3210",
+                instituicao: "Instituto Federal de Mato Grosso",
+                projetos: 3,
+                pontuacaoMedia: 8.1,
+                status: "inativo"
+            }
+        ];
+
+        let autoresFiltrados = [...autores];
+        let paginaAtual = 1;
+        const itensPorPagina = 8;
+        function novoAutor(params) {
+            return 
+        }
+        // Renderizar tabela
+        function renderizarTabela() {
+            const tabela = document.getElementById('tabelaAutores');
+            const inicio = (paginaAtual - 1) * itensPorPagina;
+            const fim = inicio + itensPorPagina;
+            const autoresPagina = autoresFiltrados.slice(inicio, fim);
+
+            tabela.innerHTML = autoresPagina.map(autor => {
+                const statusClass = autor.status === 'ativo' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+                const pontuacao = autor.pontuacaoMedia > 0 ? autor.pontuacaoMedia.toFixed(1) : 'N/A';
+                
+                return `
+                    <tr class="hover:bg-gray-50">
+                        <td class="border border-gray-300 px-4 py-3 font-medium">${autor.nome}</td>
+                        <td class="border border-gray-300 px-4 py-3">${autor.email}</td>
+                        <td class="border border-gray-300 px-4 py-3">${autor.instituicao}</td>
+                        <td class="border border-gray-300 px-4 py-3 text-center font-semibold">${autor.projetos}</td>
+                        <td class="border border-gray-300 px-4 py-3 text-center font-semibold">${pontuacao}</td>
+                        <td class="border border-gray-300 px-4 py-3">
+                            <span class="${statusClass} px-2 py-1 rounded-full text-xs font-medium">
+                                ${autor.status.charAt(0).toUpperCase() + autor.status.slice(1)}
+                            </span>
+                        </td>
+                        <td class="border border-gray-300 px-4 py-3">
+                            <button onclick="visualizarAutor(${autor.id})" class="text-blue-600 hover:text-blue-800 font-medium mr-3">
+                                Ver Perfil
+                            </button>
+                            <button onclick="editarAutor(${autor.id})" class="text-green-600 hover:text-green-800 font-medium">
+                                Editar
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            atualizarPaginacao();
+            atualizarContador();
+        }
+
+        // Atualizar paginação
+        function atualizarPaginacao() {
+            const totalPaginas = Math.ceil(autoresFiltrados.length / itensPorPagina);
+            const inicio = (paginaAtual - 1) * itensPorPagina + 1;
+            const fim = Math.min(paginaAtual * itensPorPagina, autoresFiltrados.length);
+
+            document.getElementById('infoPaginacao').textContent = 
+                `Mostrando ${inicio} a ${fim} de ${autoresFiltrados.length} autores`;
+            document.getElementById('numeroPagina').textContent = `${paginaAtual} / ${totalPaginas}`;
+            
+            document.getElementById('btnAnterior').disabled = paginaAtual === 1;
+            document.getElementById('btnProximo').disabled = paginaAtual === totalPaginas || totalPaginas === 0;
+        }
+
+        // Atualizar contador
+        function atualizarContador() {
+            const total = autoresFiltrados.length;
+            const ativos = autoresFiltrados.filter(a => a.status === 'ativo').length;
+            const comProjetos = autoresFiltrados.filter(a => a.projetos > 0).length;
+            
+            document.getElementById('contadorResultados').textContent = 
+                `${total} autores encontrados (${ativos} ativos, ${comProjetos} com projetos)`;
+        }
+
+        // Aplicar filtros
+        function aplicarFiltros() {
+            const filtroNome = document.getElementById('filtroNome').value.toLowerCase();
+            const filtroInstituicao = document.getElementById('filtroInstituicao').value.toLowerCase();
+            const filtroProjetos = document.getElementById('filtroProjetos').value;
+            const filtroStatus = document.getElementById('filtroStatus').value;
+
+            autoresFiltrados = autores.filter(autor => {
+                const matchNome = autor.nome.toLowerCase().includes(filtroNome);
+                const matchInstituicao = autor.instituicao.toLowerCase().includes(filtroInstituicao);
+                const matchStatus = !filtroStatus || autor.status === filtroStatus;
+                
+                let matchProjetos = true;
+                if (filtroProjetos) {
+                    switch (filtroProjetos) {
+                        case '0':
+                            matchProjetos = autor.projetos === 0;
+                            break;
+                        case '1-3':
+                            matchProjetos = autor.projetos >= 1 && autor.projetos <= 3;
+                            break;
+                        case '4-6':
+                            matchProjetos = autor.projetos >= 4 && autor.projetos <= 6;
+                            break;
+                        case '7+':
+                            matchProjetos = autor.projetos >= 7;
+                            break;
+                    }
+                }
+
+                return matchNome && matchInstituicao && matchProjetos && matchStatus;
+            });
+
+            paginaAtual = 1;
+            renderizarTabela();
+        }
+
+        // Limpar filtros
+        function limparFiltros() {
+            document.getElementById('filtroNome').value = '';
+            document.getElementById('filtroInstituicao').value = '';
+            document.getElementById('filtroProjetos').value = '';
+            document.getElementById('filtroStatus').value = '';
+            autoresFiltrados = [...autores];
+            paginaAtual = 1;
+            renderizarTabela();
+        }
+
+        // Visualizar autor
+        function visualizarAutor(id) {
+            // Redirecionar para página de visualização (simulado)
+            alert(`Visualizando autor ID: ${id}`);
+            // window.location.href = `/autores/${id}`;
+        }
+
+        // Editar autor
+        function editarAutor(id) {
+            alert(`Editando autor ID: ${id}`);
+            // window.location.href = `/autores/${id}/editar`;
+        }
+
+        // Event listeners
+        document.getElementById('filtroNome').addEventListener('input', aplicarFiltros);
+        document.getElementById('filtroInstituicao').addEventListener('input', aplicarFiltros);
+        document.getElementById('filtroProjetos').addEventListener('change', aplicarFiltros);
+        document.getElementById('filtroStatus').addEventListener('change', aplicarFiltros);
+        document.getElementById('limparFiltros').addEventListener('click', limparFiltros);
+
+        document.getElementById('btnAnterior').addEventListener('click', () => {
+            if (paginaAtual > 1) {
+                paginaAtual--;
+                renderizarTabela();
+            }
+        });
+
+        document.getElementById('btnProximo').addEventListener('click', () => {
+            const totalPaginas = Math.ceil(autoresFiltrados.length / itensPorPagina);
+            if (paginaAtual < totalPaginas) {
+                paginaAtual++;
+                renderizarTabela();
+            }
+        });
+
+        // Inicializar
+        renderizarTabela();
+    </script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Novo Prêmio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="max-w-4xl mx-auto p-6">
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center gap-4">
+                <button onclick="window.history.back()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H15a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                    </svg>
+                    Voltar
+                </button>
+                <h1 class="text-3xl font-bold text-gray-800">Criar Novo Prêmio</h1>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6 md:p-8">
+            <form id="formCriarPremio">
+                <div class="space-y-6">
+                    <div>
+                        <label for="nomePremio" class="block text-sm font-medium text-gray-700 mb-1">Nome do Prêmio</label>
+                        <input type="text" id="nomePremio" name="nomePremio" required
+                               class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="descricaoPremio" class="block text-sm font-medium text-gray-700 mb-1">Descrição do Prêmio</label>
+                        <textarea id="descricaoPremio" name="descricaoPremio" rows="4" required
+                                  class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                    </div>
+
+                    <fieldset class="border border-gray-300 p-4 rounded-md">
+                        <legend class="text-lg font-medium text-gray-700 px-2">Cronograma da Edição</legend>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
+                            <div>
+                                <label for="cronogramaDataInicio" class="block text-sm font-medium text-gray-700 mb-1">Data de Início da Edição</label>
+                                <input type="date" id="cronogramaDataInicio" name="cronogramaDataInicio" required
+                                       class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label for="cronogramaDataFim" class="block text-sm font-medium text-gray-700 mb-1">Data de Fim da Edição</label>
+                                <input type="date" id="cronogramaDataFim" name="cronogramaDataFim" required
+                                       class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <label for="cronogramaDescricao" class="block text-sm font-medium text-gray-700 mb-1">Detalhes do Cronograma (fases, prazos)</label>
+                            <textarea id="cronogramaDescricao" name="cronogramaDescricao" rows="3"
+                                      placeholder="Ex: Inscrições: DD/MM/AAAA - DD/MM/AAAA&#10;Avaliação: DD/MM/AAAA - DD/MM/AAAA&#10;Resultados: DD/MM/AAAA"
+                                      class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                        </div>
+                    </fieldset>
+                    
+                    <div>
+                        <label for="anoEdicao" class="block text-sm font-medium text-gray-700 mb-1">Ano da Edição</label>
+                        <input type="number" id="anoEdicao" name="anoEdicao" required min="2020" max="2099" placeholder="AAAA"
+                               class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-end gap-3">
+                    <button type="button" onclick="cancelarCriacao()"
+                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition-colors">
+                        Cancelar
+                    </button>
+                    <button type="submit"
+                            class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+                        Salvar Prêmio
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Define o valor mínimo do ano da edição para o ano atual
+        const anoAtual = new Date().getFullYear();
+        const anoEdicaoInput = document.getElementById('anoEdicao');
+        anoEdicaoInput.min = anoAtual;
+        // anoEdicaoInput.value = anoAtual; // Opcional: preencher com o ano atual por padrão
+
+
+        document.getElementById('formCriarPremio').addEventListener('submit', function(event) {
+            event.preventDefault(); // Impede o envio padrão do formulário
+
+            const nomePremio = document.getElementById('nomePremio').value;
+            const descricaoPremio = document.getElementById('descricaoPremio').value;
+            const cronogramaDataInicio = document.getElementById('cronogramaDataInicio').value;
+            const cronogramaDataFim = document.getElementById('cronogramaDataFim').value;
+            const cronogramaDescricao = document.getElementById('cronogramaDescricao').value;
+            const anoEdicao = document.getElementById('anoEdicao').value;
+
+            // Validação simples
+            if (!nomePremio || !descricaoPremio || !cronogramaDataInicio || !cronogramaDataFim || !anoEdicao) {
+                alert('Por favor, preencha todos os campos obrigatórios: Nome, Descrição, Datas do Cronograma e Ano da Edição.');
+                return;
+            }
+
+            if (new Date(cronogramaDataFim) < new Date(cronogramaDataInicio)) {
+                alert('A data de fim da edição não pode ser anterior à data de início.');
+                return;
+            }
+
+            // Simulação de criação de prêmio
+            const novoPremio = {
+                id: Date.now(), // ID simulado
+                nome: nomePremio,
+                descricao: descricaoPremio,
+                cronograma: {
+                    dataInicio: cronogramaDataInicio,
+                    dataFim: cronogramaDataFim,
+                    descricao: cronogramaDescricao
+                },
+                anoEdicao: parseInt(anoEdicao)
+            };
+
+            console.log('Novo Prêmio a ser criado:', novoPremio);
+            alert(`Prêmio "${novoPremio.nome}" (Edição ${novoPremio.anoEdicao}) pronto para ser salvo!\n(Em uma aplicação real, estes dados seriam enviados para o servidor.)`);
+
+            // Limpar o formulário (opcional)
+            // event.target.reset();
+            // anoEdicaoInput.value = new Date().getFullYear(); // Resetar ano para o atual se desejado
+
+            // Redirecionar (simulado)
+            // window.location.href = 'listar_premios.html'; 
+        });
+
+        function cancelarCriacao() {
+            if (confirm('Tem certeza que deseja cancelar a criação do prêmio? Os dados não salvos serão perdidos.')) {
+                document.getElementById('formCriarPremio').reset();
+                // anoEdicaoInput.value = new Date().getFullYear(); // Resetar ano para o atual se desejado
+                window.history.back();
+            }
+        }
+    </script>
+</body>
+</html>

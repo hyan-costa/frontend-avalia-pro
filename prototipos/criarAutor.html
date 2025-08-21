@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Novo Autor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="max-w-4xl mx-auto p-6">
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center gap-4">
+                <button onclick="window.history.back()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H15a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                    </svg>
+                    Voltar
+                </button>
+                <h1 class="text-3xl font-bold text-gray-800">Criar Novo Autor</h1>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6 md:p-8">
+            <form id="formCriarAutor">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label for="nomeCompleto" class="block text-sm font-medium text-gray-700 mb-1">Nome Completo</label>
+                        <input type="text" id="nomeCompleto" name="nomeCompleto" required
+                               class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">E-mail</label>
+                        <input type="email" id="email" name="email" required
+                               class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="cpf" class="block text-sm font-medium text-gray-700 mb-1">CPF</label>
+                        <input type="text" id="cpf" name="cpf" required placeholder="000.000.000-00"
+                               class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="telefone" class="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
+                        <input type="tel" id="telefone" name="telefone" placeholder="(00) 90000-0000"
+                               class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="instituicao" class="block text-sm font-medium text-gray-700 mb-1">Instituição</label>
+                        <input type="text" id="instituicao" name="instituicao" required
+                               class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                        <select id="status" name="status" required
+                                class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="ativo" selected>Ativo</option>
+                            <option value="inativo">Inativo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-end gap-3">
+                    <button type="button" onclick="cancelarCriacao()"
+                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition-colors">
+                        Cancelar
+                    </button>
+                    <button type="submit"
+                            class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+                        Salvar Autor
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('formCriarAutor').addEventListener('submit', function(event) {
+            event.preventDefault(); // Impede o envio padrão do formulário
+
+            // Coleta dos dados do formulário
+            const nomeCompleto = document.getElementById('nomeCompleto').value;
+            const email = document.getElementById('email').value;
+            const cpf = document.getElementById('cpf').value;
+            const telefone = document.getElementById('telefone').value;
+            const instituicao = document.getElementById('instituicao').value;
+            const status = document.getElementById('status').value;
+
+            // Validação simples (pode ser expandida)
+            if (!nomeCompleto || !email || !cpf || !instituicao) {
+                alert('Por favor, preencha todos os campos obrigatórios: Nome, E-mail, CPF e Instituição.');
+                return;
+            }
+
+            // Simulação de criação de autor
+            const novoAutor = {
+                id: Date.now(), // ID simulado
+                nome: nomeCompleto,
+                email: email,
+                cpf: cpf,
+                telefone: telefone,
+                instituicao: instituicao,
+                projetos: 0,
+                pontuacaoMedia: 0,
+                status: status
+            };
+
+            console.log('Novo Autor a ser criado:', novoAutor);
+            alert(`Autor "${novoAutor.nome}" pronto para ser salvo!\n(Em uma aplicação real, estes dados seriam enviados para o servidor.)`);
+
+            // Limpar o formulário após "salvar" (opcional)
+            // event.target.reset();
+
+            // Redirecionar para a lista de autores (simulado)
+            // window.location.href = 'listar_autores.html'; // Descomente se tiver a página de listagem
+        });
+
+        function cancelarCriacao() {
+            if (confirm('Tem certeza que deseja cancelar a criação do autor? Os dados não salvos serão perdidos.')) {
+                // Limpar o formulário
+                document.getElementById('formCriarAutor').reset();
+                // Voltar para a página anterior ou para a lista
+                window.history.back();
+                // ou window.location.href = 'listar_autores.html';
+            }
+        }
+
+        // Adicionar máscara simples para CPF e Telefone (opcional, para melhor UX)
+        // Esta é uma implementação básica. Bibliotecas como Cleave.js ou Inputmask são recomendadas para máscaras robustas.
+        
+        const cpfInput = document.getElementById('cpf');
+        cpfInput.addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, ''); // Remove tudo que não é dígito
+            if (value.length > 11) value = value.substring(0, 11); // Limita a 11 dígitos
+
+            let maskedValue = '';
+            if (value.length > 9) {
+                maskedValue = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+            } else if (value.length > 6) {
+                maskedValue = value.replace(/(\d{3})(\d{3})(\d{0,3})/, '$1.$2.$3');
+            } else if (value.length > 3) {
+                maskedValue = value.replace(/(\d{3})(\d{0,3})/, '$1.$2');
+            } else {
+                maskedValue = value;
+            }
+            e.target.value = maskedValue;
+        });
+
+        const telefoneInput = document.getElementById('telefone');
+        telefoneInput.addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 11) value = value.substring(0, 11); // Limita a 11 dígitos (com DDD e 9)
+
+            let maskedValue = '';
+            if (value.length > 10) { // (XX) XXXXX-XXXX
+                maskedValue = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+            } else if (value.length > 6) { // (XX) XXXX-XXXX (para telefones fixos ou celulares antigos)
+                 maskedValue = value.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+            } else if (value.length > 2) {
+                maskedValue = value.replace(/(\d{2})(\d{0,5})/, '($1) $2');
+            } else if (value.length > 0) {
+                maskedValue = value.replace(/(\d{0,2})/, '($1');
+            }
+            e.target.value = maskedValue;
+        });
+
+    </script>
+</body>
+</html>

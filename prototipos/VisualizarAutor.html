@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizar Autor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="max-w-6xl mx-auto p-6">
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-4">
+                <button onclick="window.history.back()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H15a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                    </svg>
+                    Voltar
+                </button>
+                <h1 class="text-3xl font-bold text-gray-800">Perfil do Autor</h1>
+            </div>
+            <div class="flex gap-2">
+                <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors" onclick="alert('Funcionalidade de editar não implementada.')">
+                    Editar
+                </button>
+            </div>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 space-y-6">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div id="autorAvatar" class="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                            </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800" id="nomeAutor"></h2>
+                            <p class="text-gray-600 font-medium" id="instituicaoAutorHeader"></p>
+                            <div class="flex items-center gap-4 mt-2">
+                                <span id="statusAutorBadge" class="px-2 py-1 rounded-full text-sm font-medium"></span>
+                                <span id="autorDesde" class="text-gray-500 text-sm"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <h3 class="text-lg font-semibold text-gray-700 border-b pb-2">Informações de Contato</h3>
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-3">
+                                    <span class="w-4 h-4 bg-blue-500 rounded flex items-center justify-center text-white text-xs">✉</span>
+                                    <div>
+                                        <p class="text-sm text-gray-500">E-mail</p>
+                                        <p class="font-medium" id="emailAutor"></p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                     <span class="w-4 h-4 bg-green-500 rounded flex items-center justify-center text-white text-xs">📞</span>
+                                    <div>
+                                        <p class="text-sm text-gray-500">Telefone</p>
+                                        <p class="font-medium" id="telefoneAutor"></p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="w-4 h-4 bg-purple-500 rounded flex items-center justify-center text-white text-xs">🆔</span>
+                                    <div>
+                                        <p class="text-sm text-gray-500">CPF</p>
+                                        <p class="font-medium" id="cpfAutor"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <h3 class="text-lg font-semibold text-gray-700 border-b pb-2">Informações Acadêmicas/Profissionais</h3>
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-3">
+                                    <span class="w-4 h-4 bg-orange-500 rounded flex items-center justify-center text-white text-xs">🎓</span>
+                                    <div>
+                                        <p class="text-sm text-gray-500">Instituição Principal</p>
+                                        <p class="font-medium" id="instituicaoAutor"></p>
+                                    </div>
+                                </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-semibold text-gray-700 mb-4">Histórico de Projetos</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50">
+                                    <th class="border border-gray-200 px-4 py-3 text-left text-sm font-medium text-gray-600">Nome do Projeto</th>
+                                    <th class="border border-gray-200 px-4 py-3 text-left text-sm font-medium text-gray-600">Data de Submissão</th>
+                                    <th class="border border-gray-200 px-4 py-3 text-left text-sm font-medium text-gray-600">Área</th>
+                                    <th class="border border-gray-200 px-4 py-3 text-left text-sm font-medium text-gray-600">Pontuação</th>
+                                    <th class="border border-gray-200 px-4 py-3 text-left text-sm font-medium text-gray-600">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaHistoricoProjetos">
+                                </tbody>
+                        </table>
+                    </div>
+                     <div id="semProjetos" class="text-center text-gray-500 py-4" style="display: none;">
+                        Este autor ainda não possui projetos registrados.
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Estatísticas do Autor</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                            <div>
+                                <p class="text-sm text-gray-600">Total de Projetos</p>
+                                <p class="text-2xl font-bold text-blue-600" id="totalProjetosStat">0</p>
+                            </div>
+                            <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                                📚
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                            <div>
+                                <p class="text-sm text-gray-600">Pontuação Média</p>
+                                <p class="text-2xl font-bold text-green-600" id="pontuacaoMediaStat">N/A</p>
+                            </div>
+                            <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                                ⭐
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
+                            <div>
+                                <p class="text-sm text-gray-600">Status Atual</p>
+                                <p class="text-xl font-bold text-orange-600" id="statusAutorStat"></p>
+                            </div>
+                            <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                                🚦
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+                            <div>
+                                <p class="text-sm text-gray-600">Membro Desde</p>
+                                <p class="text-md font-bold text-purple-600" id="membroDesdeStat">Jan 2020</p> </div>
+                            <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                                📅
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dados de exemplo do autor e seus projetos
+        // Em uma aplicação real, você buscaria esses dados (ex: pelo ID do autor na URL)
+        const autorData = {
+            id: 1,
+            nome: "João Carlos Silva",
+            email: "joao.silva@universidade.edu.br",
+            cpf: "123.456.789-01",
+            telefone: "(11) 98765-4321",
+            instituicao: "Universidade de São Paulo",
+            projetosCount: 5, // Renomeado de 'projetos' para evitar conflito com a lista
+            pontuacaoMedia: 8.2,
+            status: "ativo",
+            membroDesde: "Jan 2020" // Adicionado para exemplo
+        };
+
+        const projetosDoAutor = [
+            { id: 101, nome: "Estudo sobre IA na Educação", dataSubmissao: "15/01/2023", area: "Inteligência Artificial", pontuacao: 9.0, status: "Aprovado" },
+            { id: 102, nome: "Desenvolvimento de Software para Análise de Dados", dataSubmissao: "10/06/2023", area: "Desenvolvimento de Software", pontuacao: 8.5, status: "Aprovado" },
+            { id: 103, nome: "Pesquisa de Campo sobre Energias Renováveis", dataSubmissao: "20/11/2023", area: "Energias Renováveis", pontuacao: null, status: "Em Avaliação" },
+            { id: 104, nome: "Publicação de Artigo Científico: Impacto Social", dataSubmissao: "05/03/2024", area: "Ciências Sociais", pontuacao: 7.5, status: "Submetido" },
+            { id: 105, nome: "Inovação em Materiais Compósitos", dataSubmissao: "10/05/2024", area: "Engenharia de Materiais", pontuacao: 7.8, status: "Aprovado" }
+        ];
+
+        // Função para gerar iniciais do nome
+        function getInitials(name) {
+            if (!name) return '';
+            const parts = name.split(' ');
+            if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+            return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+        }
+
+        // Função para formatar o status do projeto com cores
+        function formatProjectStatus(status) {
+            let statusClass = '';
+            let statusText = status;
+
+            switch (status.toLowerCase()) {
+                case 'aprovado':
+                    statusClass = 'bg-green-100 text-green-800';
+                    break;
+                case 'em avaliação':
+                case 'submetido':
+                    statusClass = 'bg-yellow-100 text-yellow-800';
+                    statusText = status === 'em avaliação' ? 'Em Avaliação' : 'Submetido';
+                    break;
+                case 'rejeitado':
+                    statusClass = 'bg-red-100 text-red-800';
+                    break;
+                default:
+                    statusClass = 'bg-gray-100 text-gray-800';
+            }
+            return `<span class="${statusClass} px-2 py-1 rounded-full text-xs font-medium">${statusText}</span>`;
+        }
+        
+        // Função para formatar o status do autor
+        function formatAutorStatus(status) {
+            const statusText = status.charAt(0).toUpperCase() + status.slice(1);
+            const statusClass = status === 'ativo' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+            return { text: statusText, class: statusClass };
+        }
+
+        // Função para popular os detalhes do autor
+        function popularDetalhesAutor() {
+            document.getElementById('autorAvatar').textContent = getInitials(autorData.nome);
+            document.getElementById('nomeAutor').textContent = autorData.nome;
+            document.getElementById('instituicaoAutorHeader').textContent = autorData.instituicao;
+            
+            const autorStatus = formatAutorStatus(autorData.status);
+            const statusBadge = document.getElementById('statusAutorBadge');
+            statusBadge.textContent = autorStatus.text;
+            statusBadge.className = `${autorStatus.class} px-2 py-1 rounded-full text-sm font-medium`;
+
+            document.getElementById('autorDesde').textContent = `Autor desde: ${autorData.membroDesde}`; // Exemplo
+            
+            document.getElementById('emailAutor').textContent = autorData.email;
+            document.getElementById('telefoneAutor').textContent = autorData.telefone;
+            document.getElementById('cpfAutor').textContent = autorData.cpf;
+            document.getElementById('instituicaoAutor').textContent = autorData.instituicao;
+        }
+
+        // Função para popular o histórico de projetos
+        function popularHistoricoProjetos() {
+            const tabelaCorpo = document.getElementById('tabelaHistoricoProjetos');
+            if (projetosDoAutor.length === 0) {
+                document.getElementById('semProjetos').style.display = 'block';
+                tabelaCorpo.innerHTML = '';
+                return;
+            }
+            document.getElementById('semProjetos').style.display = 'none';
+
+            tabelaCorpo.innerHTML = projetosDoAutor.map(projeto => {
+                const pontuacao = projeto.pontuacao !== null ? projeto.pontuacao.toFixed(1) : 'N/A';
+                return `
+                    <tr class="hover:bg-gray-50">
+                        <td class="border border-gray-200 px-4 py-3">${projeto.nome}</td>
+                        <td class="border border-gray-200 px-4 py-3">${projeto.dataSubmissao}</td>
+                        <td class="border border-gray-200 px-4 py-3">${projeto.area}</td>
+                        <td class="border border-gray-200 px-4 py-3 text-center">${pontuacao}</td>
+                        <td class="border border-gray-200 px-4 py-3">${formatProjectStatus(projeto.status)}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        
+        // Função para popular as estatísticas do autor
+        function popularEstatisticasAutor() {
+            document.getElementById('totalProjetosStat').textContent = autorData.projetosCount;
+            document.getElementById('pontuacaoMediaStat').textContent = autorData.pontuacaoMedia > 0 ? autorData.pontuacaoMedia.toFixed(1) : 'N/A';
+            
+            const autorStatus = formatAutorStatus(autorData.status);
+            document.getElementById('statusAutorStat').textContent = autorStatus.text;
+            document.getElementById('statusAutorStat').className = `text-xl font-bold text-${autorData.status === 'ativo' ? 'green' : 'red'}-600`;
+            document.getElementById('membroDesdeStat').textContent = autorData.membroDesde;
+        }
+
+        // Inicializar a página
+        document.addEventListener('DOMContentLoaded', () => {
+            // const urlParams = new URLSearchParams(window.location.search);
+            // const autorId = urlParams.get('id');
+            // Aqui você faria uma chamada para buscar os dados do autor com base no autorId
+            // Por enquanto, usamos os dados de exemplo:
+            popularDetalhesAutor();
+            popularHistoricoProjetos();
+            popularAreasAtuacao();
+            popularEstatisticasAutor();
+        });
+    </script>
+</body>
+</html>

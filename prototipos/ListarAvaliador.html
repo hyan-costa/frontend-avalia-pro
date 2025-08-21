@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listar Avaliadores</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">Lista de Avaliadores</h1>
+            <button onclick="window.location.href='#'" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors">
+                + Novo Avaliador
+            </button>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Filtros</h2>
+            <div class="grid md:grid-cols-5 gap-4">
+                <input 
+                    type="text" 
+                    id="filtroNome"
+                    placeholder="Filtrar por nome" 
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500">
+                
+                <input 
+                    type="text" 
+                    id="filtroInstituicao"
+                    placeholder="Filtrar por instituição" 
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500">
+
+                <input 
+                    type="text" 
+                    id="filtroAreaAtuacao"
+                    placeholder="Filtrar por área de atuação" 
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500">
+                
+                <select id="filtroNumAvaliacoes" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline focus:border-blue-500">
+                    <option value="">Todas as qtd. de avaliações</option>
+                    <option value="0">Sem avaliações</option>
+                    <option value="1-10">1 a 10 avaliações</option>
+                    <option value="11-25">11 a 25 avaliações</option>
+                    <option value="26-50">26 a 50 avaliações</option>
+                    <option value="51+">51 ou mais avaliações</option>
+                </select>
+                
+                <select id="filtroStatus" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline focus:border-blue-500">
+                    <option value="">Todos os status</option>
+                    <option value="ativo">Ativo</option>
+                    <option value="inativo">Inativo</option>
+                </select>
+            </div>
+            <div class="mt-4">
+                <button id="limparFiltros" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+                    Limpar Filtros
+                </button>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <span id="contadorResultados" class="text-gray-700 font-medium"></span>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full border-collapse">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Nome Completo</th>
+                            <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">E-mail</th>
+                            <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Instituição</th>
+                            <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Área Principal</th>
+                            <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700 text-center">Nº Avaliações</th>
+                            <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700 text-center">Nota Média (dada)</th>
+                            <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Status</th>
+                            <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaAvaliadores">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="flex justify-between items-center mt-6">
+            <span id="infoPaginacao" class="text-gray-700"></span>
+            <div class="flex gap-2">
+                <button id="btnAnterior" class="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-bold py-2 px-4 rounded-l transition-colors">
+                    Anterior
+                </button>
+                <span id="numeroPagina" class="bg-gray-200 px-4 py-2 font-medium text-gray-700"></span>
+                <button id="btnProximo" class="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-bold py-2 px-4 rounded-r transition-colors">
+                    Próximo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dados dos avaliadores (exemplo)
+        const avaliadores = [
+            {
+                id: 1,
+                nome: "Dra. Ana Silva Santos",
+                email: "ana.santos@universidade.edu.br",
+                instituicao: "Universidade de São Paulo - USP",
+                areaPrincipal: "Tecnologia da Informação",
+                numAvaliacoes: 127,
+                notaMediaAvaliacoes: 8.3,
+                status: "ativo",
+                areasEspecializacao: ["Desenvolvimento Web", "Inteligência Artificial", "Machine Learning"]
+            },
+            {
+                id: 2,
+                nome: "Dr. Carlos Pereira Lima",
+                email: "carlos.lima@instituto.gov.br",
+                instituicao: "Instituto Federal de Pesquisas",
+                areaPrincipal: "Engenharia Mecânica",
+                numAvaliacoes: 85,
+                notaMediaAvaliacoes: 7.9,
+                status: "ativo",
+                areasEspecializacao: ["Termodinâmica", "Resistência dos Materiais"]
+            },
+            {
+                id: 3,
+                nome: "Profa. Beatriz Costa Alves",
+                email: "beatriz.alves@faculdadeabc.edu",
+                instituicao: "Faculdade ABC de Ciências",
+                areaPrincipal: "Biologia Celular",
+                numAvaliacoes: 42,
+                notaMediaAvaliacoes: 9.1,
+                status: "inativo",
+                areasEspecializacao: ["Genética", "Microbiologia"]
+            },
+            {
+                id: 4,
+                nome: "Dr. Fernando Martins Oliveira",
+                email: "fernando.oliveira@centropesquisa.org",
+                instituicao: "Centro de Pesquisa Avançada",
+                areaPrincipal: "Física Quântica",
+                numAvaliacoes: 150,
+                notaMediaAvaliacoes: 8.8,
+                status: "ativo",
+                areasEspecializacao: ["Mecânica Quântica", "Física de Partículas"]
+            },
+            {
+                id: 5,
+                nome: "MSc. Juliana Ribeiro Fernandes",
+                email: "juliana.fernandes@consultoria.com",
+                instituicao: "Consultoria Tech Solutions",
+                areaPrincipal: "Gestão de Projetos",
+                numAvaliacoes: 5,
+                notaMediaAvaliacoes: 7.5,
+                status: "ativo",
+                areasEspecializacao: ["Metodologias Ágeis", "PMBOK"]
+            },
+            {
+                id: 6,
+                nome: "Dr. Ricardo Almeida Souza",
+                email: "ricardo.souza@universidadez.edu",
+                instituicao: "Universidade Z",
+                areaPrincipal: "Inteligência Artificial",
+                numAvaliacoes: 78,
+                notaMediaAvaliacoes: 8.5,
+                status: "ativo",
+                areasEspecializacao: ["Machine Learning", "Processamento de Linguagem Natural"]
+            },
+             {
+                id: 7,
+                nome: "Profa. Dra. Lúcia Guimarães",
+                email: "lucia.g@emailtop.com",
+                instituicao: "Universidade Estadual de Campinas",
+                areaPrincipal: "Ciência da Computação",
+                numAvaliacoes: 0,
+                notaMediaAvaliacoes: 0,
+                status: "ativo",
+                areasEspecializacao: ["Algoritmos", "Teoria da Computação"]
+            },
+            {
+                id: 8,
+                nome: "Dr. Marcos Vinicius Andrade",
+                email: "marcos.andrade@hospitalgeral.med.br",
+                instituicao: "Hospital Geral Central",
+                areaPrincipal: "Medicina Interna",
+                numAvaliacoes: 22,
+                notaMediaAvaliacoes: 9.0,
+                status: "inativo",
+                areasEspecializacao: ["Cardiologia", "Pneumologia"]
+            }
+            // Adicionar mais avaliadores para teste
+        ];
+
+        let avaliadoresFiltrados = [...avaliadores];
+        let paginaAtual = 1;
+        const itensPorPagina = 5;
+
+        // Renderizar tabela
+        function renderizarTabela() {
+            const tabela = document.getElementById('tabelaAvaliadores');
+            const inicio = (paginaAtual - 1) * itensPorPagina;
+            const fim = inicio + itensPorPagina;
+            const avaliadoresPagina = avaliadoresFiltrados.slice(inicio, fim);
+
+            tabela.innerHTML = avaliadoresPagina.map(avaliador => {
+                const statusClass = avaliador.status === 'ativo' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+                const notaMediaFormatada = avaliador.notaMediaAvaliacoes > 0 ? avaliador.notaMediaAvaliacoes.toFixed(1) : 'N/A';
+                
+                return `
+                    <tr class="hover:bg-gray-50">
+                        <td class="border border-gray-300 px-4 py-3 font-medium">${avaliador.nome}</td>
+                        <td class="border border-gray-300 px-4 py-3">${avaliador.email}</td>
+                        <td class="border border-gray-300 px-4 py-3">${avaliador.instituicao}</td>
+                        <td class="border border-gray-300 px-4 py-3">${avaliador.areaPrincipal}</td>
+                        <td class="border border-gray-300 px-4 py-3 text-center font-semibold">${avaliador.numAvaliacoes}</td>
+                        <td class="border border-gray-300 px-4 py-3 text-center font-semibold">${notaMediaFormatada}</td>
+                        <td class="border border-gray-300 px-4 py-3">
+                            <span class="${statusClass} px-2 py-1 rounded-full text-xs font-medium">
+                                ${avaliador.status.charAt(0).toUpperCase() + avaliador.status.slice(1)}
+                            </span>
+                        </td>
+                        <td class="border border-gray-300 px-4 py-3">
+                            <button onclick="visualizarAvaliador(${avaliador.id})" class="text-blue-600 hover:text-blue-800 font-medium mr-3">
+                                Ver Perfil
+                            </button>
+                            <button onclick="editarAvaliador(${avaliador.id})" class="text-green-600 hover:text-green-800 font-medium">
+                                Editar
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            atualizarPaginacao();
+            atualizarContador();
+        }
+
+        // Atualizar paginação
+        function atualizarPaginacao() {
+            const totalPaginas = Math.ceil(avaliadoresFiltrados.length / itensPorPagina);
+            const inicio = (paginaAtual - 1) * itensPorPagina + 1;
+            const fim = Math.min(paginaAtual * itensPorPagina, avaliadoresFiltrados.length);
+
+            document.getElementById('infoPaginacao').textContent = 
+                avaliadoresFiltrados.length > 0 ? `Mostrando ${inicio} a ${fim} de ${avaliadoresFiltrados.length} avaliadores` : 'Nenhum avaliador encontrado';
+            document.getElementById('numeroPagina').textContent = totalPaginas > 0 ? `${paginaAtual} / ${totalPaginas}` : '0 / 0';
+            
+            document.getElementById('btnAnterior').disabled = paginaAtual === 1;
+            document.getElementById('btnProximo').disabled = paginaAtual === totalPaginas || totalPaginas === 0;
+        }
+
+        // Atualizar contador
+        function atualizarContador() {
+            const total = avaliadoresFiltrados.length;
+            const ativos = avaliadoresFiltrados.filter(a => a.status === 'ativo').length;
+            const comAvaliacoes = avaliadoresFiltrados.filter(a => a.numAvaliacoes > 0).length;
+            
+            document.getElementById('contadorResultados').textContent = 
+                `${total} avaliadores encontrados (${ativos} ativos, ${comAvaliacoes} com avaliações)`;
+        }
+
+        // Aplicar filtros
+        function aplicarFiltros() {
+            const filtroNome = document.getElementById('filtroNome').value.toLowerCase();
+            const filtroInstituicao = document.getElementById('filtroInstituicao').value.toLowerCase();
+            const filtroArea = document.getElementById('filtroAreaAtuacao').value.toLowerCase();
+            const filtroAvaliacoes = document.getElementById('filtroNumAvaliacoes').value;
+            const filtroStatus = document.getElementById('filtroStatus').value;
+
+            avaliadoresFiltrados = avaliadores.filter(avaliador => {
+                const matchNome = avaliador.nome.toLowerCase().includes(filtroNome);
+                const matchInstituicao = avaliador.instituicao.toLowerCase().includes(filtroInstituicao);
+                const matchArea = avaliador.areaPrincipal.toLowerCase().includes(filtroArea) || 
+                                  (avaliador.areasEspecializacao && avaliador.areasEspecializacao.some(ae => ae.toLowerCase().includes(filtroArea)));
+                const matchStatus = !filtroStatus || avaliador.status === filtroStatus;
+                
+                let matchAvaliacoes = true;
+                if (filtroAvaliacoes) {
+                    const num = avaliador.numAvaliacoes;
+                    switch (filtroAvaliacoes) {
+                        case '0': matchAvaliacoes = num === 0; break;
+                        case '1-10': matchAvaliacoes = num >= 1 && num <= 10; break;
+                        case '11-25': matchAvaliacoes = num >= 11 && num <= 25; break;
+                        case '26-50': matchAvaliacoes = num >= 26 && num <= 50; break;
+                        case '51+': matchAvaliacoes = num >= 51; break;
+                    }
+                }
+
+                return matchNome && matchInstituicao && matchArea && matchAvaliacoes && matchStatus;
+            });
+
+            paginaAtual = 1;
+            renderizarTabela();
+        }
+
+        // Limpar filtros
+        function limparFiltros() {
+            document.getElementById('filtroNome').value = '';
+            document.getElementById('filtroInstituicao').value = '';
+            document.getElementById('filtroAreaAtuacao').value = '';
+            document.getElementById('filtroNumAvaliacoes').value = '';
+            document.getElementById('filtroStatus').value = '';
+            avaliadoresFiltrados = [...avaliadores];
+            paginaAtual = 1;
+            renderizarTabela();
+        }
+
+        // Visualizar avaliador
+        function visualizarAvaliador(id) {
+            // Idealmente, redirecionaria para a página de visualização com o ID
+            // Ex: window.location.href = `/visualizar_avaliador.html?id=${id}`;
+            alert(`Visualizando perfil do avaliador ID: ${id}`);
+        }
+
+        // Editar avaliador
+        function editarAvaliador(id) {
+            alert(`Editando avaliador ID: ${id}`);
+            // Ex: window.location.href = `/editar_avaliador.html?id=${id}`;
+        }
+
+        // Event listeners para filtros
+        document.getElementById('filtroNome').addEventListener('input', aplicarFiltros);
+        document.getElementById('filtroInstituicao').addEventListener('input', aplicarFiltros);
+        document.getElementById('filtroAreaAtuacao').addEventListener('input', aplicarFiltros);
+        document.getElementById('filtroNumAvaliacoes').addEventListener('change', aplicarFiltros);
+        document.getElementById('filtroStatus').addEventListener('change', aplicarFiltros);
+        document.getElementById('limparFiltros').addEventListener('click', limparFiltros);
+
+        // Event listeners para paginação
+        document.getElementById('btnAnterior').addEventListener('click', () => {
+            if (paginaAtual > 1) {
+                paginaAtual--;
+                renderizarTabela();
+            }
+        });
+
+        document.getElementById('btnProximo').addEventListener('click', () => {
+            const totalPaginas = Math.ceil(avaliadoresFiltrados.length / itensPorPagina);
+            if (paginaAtual < totalPaginas) {
+                paginaAtual++;
+                renderizarTabela();
+            }
+        });
+
+        // Inicializar
+        renderizarTabela();
+    </script>
+</body>
+</html>

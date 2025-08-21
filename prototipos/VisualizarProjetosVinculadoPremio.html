@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projetos Inscritos no Prêmio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-7xl mx-auto">
+        <div class="mb-6">
+            <div class="flex items-center gap-4 mb-2">
+                <button onclick="window.history.back()" class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-sm transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H15a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                    </svg>
+                    Voltar
+                </button>
+                <h1 class="text-2xl font-bold text-gray-800">
+                    Projetos Inscritos: <span id="nomePremioHeader" class="text-blue-600"></span>
+                </h1>
+            </div>
+            <p class="text-sm text-gray-600 ml-10">
+                Edição <span id="anoEdicaoHeader" class="font-semibold"></span> - Status do Prêmio: <span id="statusPremioHeader" class="font-semibold"></span>
+            </p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Filtrar Projetos</h2>
+            <div class="grid md:grid-cols-3 gap-4">
+                <input 
+                    type="text" 
+                    id="filtroTituloProjeto"
+                    placeholder="Filtrar por título do projeto" 
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500">
+                
+                <input 
+                    type="text" 
+                    id="filtroAreaTematica"
+                    placeholder="Filtrar por área temática" 
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500">
+
+                <input 
+                    type="text" 
+                    id="filtroAutor"
+                    placeholder="Filtrar por nome do autor" 
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500">
+            </div>
+            <div class="mt-4">
+                <button id="limparFiltrosProjetos" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+                    Limpar Filtros
+                </button>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <span id="contadorResultadosProjetos" class="text-gray-700 font-medium"></span>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full border-collapse">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Título do Projeto</th>
+                            <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Área Temática</th>
+                            <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Autores</th>
+                            <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700 text-center">Data de Envio</th>
+                            <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaProjetosInscritos">
+                        </tbody>
+                </table>
+                 <div id="semProjetosInscritos" class="text-center text-gray-500 py-8" style="display: none;">
+                    Nenhum projeto inscrito para este prêmio até o momento.
+                </div>
+            </div>
+        </div>
+        
+        <div class="flex justify-between items-center mt-6">
+            <span id="infoPaginacaoProjetos" class="text-gray-700"></span>
+            <div class="flex gap-2">
+                <button id="btnAnteriorProjetos" class="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-bold py-2 px-4 rounded-l transition-colors">
+                    Anterior
+                </button>
+                <span id="numeroPaginaProjetos" class="bg-gray-200 px-4 py-2 font-medium text-gray-700"></span>
+                <button id="btnProximoProjetos" class="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-bold py-2 px-4 rounded-r transition-colors">
+                    Próximo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data de referência para status do prêmio
+        const CURRENT_DATE_FOR_STATUS = new Date("2025-05-22T00:00:00.000-03:00");
+
+        // Dados do Prêmio (simulado, viria da página anterior ou backend)
+        const premioAtual = {
+            id: 1,
+            nome: "Prêmio Inovação Tech",
+            anoEdicao: 2025,
+            cronograma: { dataInicio: "2025-03-01", dataFim: "2025-10-31" } 
+        };
+
+        // Dados dos projetos inscritos (simulado)
+        const todosProjetos = [
+            {
+                id: 101, premioId: 1, titulo: "Sistema Inteligente de Irrigação Urbana", areaTematica: "Tecnologia e Sustentabilidade", 
+                resumo: "Um sistema IoT para otimizar o uso de água em jardins e parques urbanos.", 
+                autores: [{ id: 1, nome: "João Carlos Silva" }, { id: 6, nome: "Luciana Barbosa Mendes" }], dataEnvio: "2025-04-15"
+            },
+            {
+                id: 102, premioId: 1, titulo: "Plataforma Educacional com IA", areaTematica: "Educação e Tecnologia",
+                resumo: "Ferramenta adaptativa para aprendizado personalizado.",
+                autores: [{ id: 2, nome: "Maria Fernanda Santos" }], dataEnvio: "2025-04-20"
+            },
+            {
+                id: 103, premioId: 1, titulo: "Energia Renovável Comunitária", areaTematica: "Sustentabilidade e Energia",
+                resumo: "Modelo de microgeração de energia solar para comunidades.",
+                autores: [{ id: 5, nome: "Roberto Lima Pereira" }, {id: 9, nome: "André Luiz Santos"}], dataEnvio: "2025-04-01"
+            },
+            {
+                id: 104, premioId: 2, titulo: "Descoberta de Novos Fármacos", areaTematica: "Saúde e Biotecnologia",
+                resumo: "Pesquisa utilizando modelagem computacional para identificar novos compostos.",
+                autores: [{ id: 7, nome: "Carlos Eduardo Rocha" }], dataEnvio: "2025-03-10" 
+            }, // Projeto de outro prêmio
+            {
+                id: 105, premioId: 1, titulo: "App de Mobilidade Acessível", areaTematica: "Inclusão Social e Tecnologia",
+                resumo: "Aplicativo para facilitar o deslocamento de pessoas com mobilidade reduzida.",
+                autores: [{ id: 4, nome: "Ana Clara Costa" }], dataEnvio: "2025-04-28"
+            },
+             {
+                id: 106, premioId: 1, titulo: "Análise Preditiva para o Varejo", areaTematica: "Inteligência Artificial e Negócios",
+                resumo: "Uso de machine learning para prever tendências de consumo.",
+                autores: [{ id: 11, nome: "Ricardo Mendes Lima" }], dataEnvio: "2025-03-25"
+            },
+            {
+                id: 107, premioId: 1, titulo: "Monitoramento Ambiental com Drones", areaTematica: "Meio Ambiente e Tecnologia",
+                resumo: "Sistema de drones para detecção de desmatamento e queimadas.",
+                autores: [{ id: 3, nome: "Pedro Henrique Oliveira" }, {id: 1, nome: "João Carlos Silva"}], dataEnvio: "2025-04-18"
+            }
+        ];
+
+        // Filtra projetos apenas para o prêmio atual
+        const projetosInscritosNestePremio = todosProjetos.filter(p => p.premioId === premioAtual.id);
+
+        let projetosFiltrados = [...projetosInscritosNestePremio];
+        let paginaAtualProjetos = 1;
+        const itensPorPaginaProjetos = 5;
+
+        function getStatusDoPremio(premioObj, dataReferencia) {
+            const hoje = new Date(dataReferencia.toDateString());
+            const inicio = new Date(new Date(premioObj.cronograma.dataInicio).toDateString());
+            const fim = new Date(new Date(premioObj.cronograma.dataFim).toDateString());
+            if (hoje < inicio) return "Futuro";
+            if (hoje >= inicio && hoje <= fim) return "Em Andamento";
+            return "Encerrado";
+        }
+        
+        function formatarDataSimples(dataString) {
+            if (!dataString) return 'N/A';
+             const data = new Date(dataString + 'T00:00:00');
+            return data.toLocaleDateString('pt-BR');
+        }
+
+        function formatarListaAutores(autoresArray) {
+            if (!autoresArray || autoresArray.length === 0) return 'N/A';
+            return autoresArray.map(autor => autor.nome).join(', ');
+        }
+
+        function carregarInfoPremio() {
+            document.getElementById('nomePremioHeader').textContent = premioAtual.nome;
+            document.getElementById('anoEdicaoHeader').textContent = premioAtual.anoEdicao;
+            document.getElementById('statusPremioHeader').textContent = getStatusDoPremio(premioAtual, CURRENT_DATE_FOR_STATUS);
+        }
+
+        function renderizarTabelaProjetos() {
+            const tabelaCorpo = document.getElementById('tabelaProjetosInscritos');
+            const semProjetosDiv = document.getElementById('semProjetosInscritos');
+            
+            if (projetosFiltrados.length === 0) {
+                tabelaCorpo.innerHTML = '';
+                semProjetosDiv.style.display = 'block';
+                atualizarPaginacaoProjetos();
+                atualizarContadorProjetos();
+                return;
+            }
+            semProjetosDiv.style.display = 'none';
+            
+            const inicio = (paginaAtualProjetos - 1) * itensPorPaginaProjetos;
+            const fim = inicio + itensPorPaginaProjetos;
+            const projetosPagina = projetosFiltrados.slice(inicio, fim);
+
+            tabelaCorpo.innerHTML = projetosPagina.map(projeto => {
+                return `
+                    <tr class="hover:bg-gray-50">
+                        <td class="border border-gray-300 px-4 py-3 font-medium">${projeto.titulo}</td>
+                        <td class="border border-gray-300 px-4 py-3">${projeto.areaTematica}</td>
+                        <td class="border border-gray-300 px-4 py-3 text-sm">${formatarListaAutores(projeto.autores)}</td>
+                        <td class="border border-gray-300 px-4 py-3 text-center">${formatarDataSimples(projeto.dataEnvio)}</td>
+                        <td class="border border-gray-300 px-4 py-3">
+                            <button onclick="visualizarDetalhesProjeto(${projeto.id})" class="text-blue-600 hover:text-blue-800 font-medium text-sm">
+                                Ver Detalhes
+                            </button>
+                            </td>
+                    </tr>
+                `;
+            }).join('');
+
+            atualizarPaginacaoProjetos();
+            atualizarContadorProjetos();
+        }
+
+        function atualizarPaginacaoProjetos() {
+            const totalPaginas = Math.ceil(projetosFiltrados.length / itensPorPaginaProjetos);
+            const inicio = (paginaAtualProjetos - 1) * itensPorPaginaProjetos + 1;
+            const fim = Math.min(paginaAtualProjetos * itensPorPaginaProjetos, projetosFiltrados.length);
+
+            document.getElementById('infoPaginacaoProjetos').textContent = 
+                projetosFiltrados.length > 0 ? `Mostrando ${inicio} a ${fim} de ${projetosFiltrados.length} projetos` : 'Nenhum projeto encontrado';
+            document.getElementById('numeroPaginaProjetos').textContent = totalPaginas > 0 ? `${paginaAtualProjetos} / ${totalPaginas}` : '0 / 0';
+            
+            document.getElementById('btnAnteriorProjetos').disabled = paginaAtualProjetos === 1;
+            document.getElementById('btnProximoProjetos').disabled = paginaAtualProjetos === totalPaginas || totalPaginas === 0;
+        }
+
+        function atualizarContadorProjetos() {
+            const total = projetosFiltrados.length;
+            document.getElementById('contadorResultadosProjetos').textContent = 
+                `${total} projeto(s) inscrito(s) encontrado(s).`;
+        }
+
+        function aplicarFiltrosProjetos() {
+            const filtroTitulo = document.getElementById('filtroTituloProjeto').value.toLowerCase();
+            const filtroArea = document.getElementById('filtroAreaTematica').value.toLowerCase();
+            const filtroAutor = document.getElementById('filtroAutor').value.toLowerCase();
+
+            projetosFiltrados = projetosInscritosNestePremio.filter(projeto => {
+                const matchTitulo = projeto.titulo.toLowerCase().includes(filtroTitulo);
+                const matchArea = projeto.areaTematica.toLowerCase().includes(filtroArea);
+                const matchAutor = projeto.autores.some(autor => autor.nome.toLowerCase().includes(filtroAutor));
+                
+                return matchTitulo && matchArea && matchAutor;
+            });
+
+            paginaAtualProjetos = 1;
+            renderizarTabelaProjetos();
+        }
+
+        function limparFiltrosProjetos() {
+            document.getElementById('filtroTituloProjeto').value = '';
+            document.getElementById('filtroAreaTematica').value = '';
+            document.getElementById('filtroAutor').value = '';
+            projetosFiltrados = [...projetosInscritosNestePremio];
+            paginaAtualProjetos = 1;
+            renderizarTabelaProjetos();
+        }
+
+        function visualizarDetalhesProjeto(projetoId) {
+            alert(`Visualizando detalhes do projeto ID: ${projetoId} (funcionalidade a ser implementada, mostraria o resumo, etc).`);
+        }
+
+        // Event Listeners para Filtros
+        document.getElementById('filtroTituloProjeto').addEventListener('input', aplicarFiltrosProjetos);
+        document.getElementById('filtroAreaTematica').addEventListener('input', aplicarFiltrosProjetos);
+        document.getElementById('filtroAutor').addEventListener('input', aplicarFiltrosProjetos);
+        document.getElementById('limparFiltrosProjetos').addEventListener('click', limparFiltrosProjetos);
+
+        // Event Listeners para Paginação
+        document.getElementById('btnAnteriorProjetos').addEventListener('click', () => {
+            if (paginaAtualProjetos > 1) {
+                paginaAtualProjetos--;
+                renderizarTabelaProjetos();
+            }
+        });
+
+        document.getElementById('btnProximoProjetos').addEventListener('click', () => {
+            const totalPaginas = Math.ceil(projetosFiltrados.length / itensPorPaginaProjetos);
+            if (paginaAtualProjetos < totalPaginas) {
+                paginaAtualProjetos++;
+                renderizarTabelaProjetos();
+            }
+        });
+
+        // Inicialização da página
+        document.addEventListener('DOMContentLoaded', () => {
+            // Em uma aplicação real, o premioId viria da URL.
+            // Ex: const urlParams = new URLSearchParams(window.location.search);
+            // const premioIdParam = urlParams.get('premioId');
+            // Se premioIdParam, carregar dados do prêmio e projetos associados.
+            // Por agora, usamos os dados simulados.
+            
+            carregarInfoPremio();
+            renderizarTabelaProjetos();
+        });
+
+    </script>
+</body>
+</html>

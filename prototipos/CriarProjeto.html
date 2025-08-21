@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Novo Projeto</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styling for multi-select if needed, or use a library for better UX */
+        select[multiple] {
+            min-height: 100px; /* Example height */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="max-w-4xl mx-auto p-6">
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center gap-4">
+                <button onclick="window.history.back()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H15a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                    </svg>
+                    Voltar
+                </button>
+                <h1 class="text-3xl font-bold text-gray-800">Criar Novo Projeto</h1>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6 md:p-8">
+            <form id="formCriarProjeto">
+                <div class="space-y-6">
+                    <div>
+                        <label for="tituloProjeto" class="block text-sm font-medium text-gray-700 mb-1">Título do Projeto <span class="text-red-500">*</span></label>
+                        <input type="text" id="tituloProjeto" name="tituloProjeto" required
+                               class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="areaTematica" class="block text-sm font-medium text-gray-700 mb-1">Área Temática <span class="text-red-500">*</span></label>
+                        <input type="text" id="areaTematica" name="areaTematica" required
+                               class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="resumoProjeto" class="block text-sm font-medium text-gray-700 mb-1">Resumo <span class="text-red-500">*</span></label>
+                        <textarea id="resumoProjeto" name="resumoProjeto" rows="5" required
+                                  class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                    </div>
+
+                    <div>
+                        <label for="autoresProjeto" class="block text-sm font-medium text-gray-700 mb-1">Autores <span class="text-red-500">*</span> (Segure Ctrl/Cmd para selecionar múltiplos)</label>
+                        <select id="autoresProjeto" name="autoresProjeto" multiple required
+                                class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </select>
+                    </div>
+                    
+                    <div>
+                        <label for="premioConcorrendo" class="block text-sm font-medium text-gray-700 mb-1">Prêmio ao qual concorre <span class="text-red-500">*</span></label>
+                        <select id="premioConcorrendo" name="premioConcorrendo" required
+                                class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="" disabled selected>Selecione um prêmio...</option>
+                            </select>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="dataEnvio" class="block text-sm font-medium text-gray-700 mb-1">Data de Envio/Criação <span class="text-red-500">*</span></label>
+                            <input type="date" id="dataEnvio" name="dataEnvio" required
+                                   class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label for="statusProjeto" class="block text-sm font-medium text-gray-700 mb-1">Status Inicial <span class="text-red-500">*</span></label>
+                            <select id="statusProjeto" name="statusProjeto" required
+                                    class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="Em Desenvolvimento" selected>Em Desenvolvimento</option>
+                                <option value="Pronto para Submissão">Pronto para Submissão</option>
+                                <option value="Submetido">Submetido</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-end gap-3">
+                    <button type="button" onclick="cancelarCriacao()"
+                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition-colors">
+                        Cancelar
+                    </button>
+                    <button type="submit"
+                            class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+                        Salvar Projeto
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Data de referência para status do prêmio
+        const CURRENT_DATE_FOR_STATUS = new Date("2025-05-22T00:00:00.000-03:00");
+
+        // --- DADOS DE EXEMPLO (simulando busca de um backend) ---
+        const autoresDisponiveis = [
+            { id: 1, nome: "João Carlos Silva" }, { id: 2, nome: "Maria Fernanda Santos" },
+            { id: 3, nome: "Pedro Henrique Oliveira" }, { id: 4, nome: "Ana Clara Costa" },
+            { id: 5, nome: "Roberto Lima Pereira" }, { id: 6, nome: "Luciana Barbosa Mendes" },
+            { id: 7, nome: "Carlos Eduardo Rocha" }, { id: 8, nome: "Patricia Alves Campos" },
+            { id: 9, nome: "André Luiz Santos" }, { id: 10, nome: "Fernanda Silva Oliveira" },
+            { id: 11, nome: "Ricardo Mendes Lima" }, { id: 12, nome: "Juliana Costa Pereira" }
+        ];
+
+        const premiosDisponiveis = [
+            { id: 1, nome: "Prêmio Inovação Tech", anoEdicao: 2025, cronograma: { dataInicio: "2025-03-01", dataFim: "2025-10-31"} },
+            { id: 2, nome: "Prêmio Jovem Cientista", anoEdicao: 2025, cronograma: { dataInicio: "2025-01-15", dataFim: "2025-05-20"} }, // Encerrado em 22/05/2025
+            { id: 3, nome: "Prêmio Sustentabilidade Global", anoEdicao: 2025, cronograma: { dataInicio: "2025-06-01", dataFim: "2025-12-15"} }, // Futuro
+            { id: 4, nome: "Prêmio Arte e Cultura", anoEdicao: 2024, cronograma: { dataInicio: "2024-04-01", dataFim: "2024-11-30"} }, // Encerrado (ano anterior)
+            { id: 5, nome: "Prêmio Excelência em Educação", anoEdicao: 2026, cronograma: { dataInicio: "2026-02-01", dataFim: "2026-09-30"} } // Futuro distante
+        ];
+        // --- FIM DADOS DE EXEMPLO ---
+
+        function getStatusDoPremio(premioObj, dataReferencia) {
+            const hoje = new Date(dataReferencia.toDateString());
+            const inicio = new Date(new Date(premioObj.cronograma.dataInicio).toDateString());
+            const fim = new Date(new Date(premioObj.cronograma.dataFim).toDateString());
+            if (hoje < inicio) return "Futuro";
+            if (hoje >= inicio && hoje <= fim) return "Em Andamento"; // Apto para submissão
+            return "Encerrado";
+        }
+
+        function popularSelectAutores() {
+            const select = document.getElementById('autoresProjeto');
+            select.innerHTML = ''; // Limpa opções existentes
+            autoresDisponiveis.forEach(autor => {
+                const option = document.createElement('option');
+                option.value = autor.id;
+                option.textContent = autor.nome;
+                select.appendChild(option);
+            });
+        }
+
+        function popularSelectPremios() {
+            const select = document.getElementById('premioConcorrendo');
+            const placeholder = select.querySelector('option[disabled]');
+            select.innerHTML = ''; // Limpa opções existentes, exceto o placeholder
+            if(placeholder) select.appendChild(placeholder);
+
+            premiosDisponiveis.forEach(premio => {
+                const status = getStatusDoPremio(premio, CURRENT_DATE_FOR_STATUS);
+                // Apenas prêmios "Em Andamento" ou "Futuro" são elegíveis para novas submissões
+                if (status === "Em Andamento" || status === "Futuro") {
+                    const option = document.createElement('option');
+                    option.value = premio.id;
+                    option.textContent = `${premio.nome} (${premio.anoEdicao}) - Status: ${status}`;
+                    select.appendChild(option);
+                }
+            });
+            if (select.options.length <= 1) { // Só o placeholder
+                 const option = document.createElement('option');
+                 option.value = "";
+                 option.textContent = "Nenhum prêmio aberto para submissão no momento";
+                 option.disabled = true;
+                 select.appendChild(option);
+            }
+        }
+
+        function setDefaultDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('dataEnvio').value = today;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            popularSelectAutores();
+            popularSelectPremios();
+            setDefaultDate();
+        });
+
+        document.getElementById('formCriarProjeto').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const titulo = document.getElementById('tituloProjeto').value;
+            const areaTematica = document.getElementById('areaTematica').value;
+            const resumo = document.getElementById('resumoProjeto').value;
+            const dataEnvio = document.getElementById('dataEnvio').value;
+            const statusProjeto = document.getElementById('statusProjeto').value;
+            const premioId = document.getElementById('premioConcorrendo').value;
+            
+            const autoresSelect = document.getElementById('autoresProjeto');
+            const autoresSelecionadosIds = Array.from(autoresSelect.selectedOptions).map(option => parseInt(option.value));
+            const autoresSelecionados = autoresDisponiveis.filter(autor => autoresSelecionadosIds.includes(autor.id)).map(a => ({id: a.id, nome: a.nome}));
+
+
+            if (!titulo || !areaTematica || !resumo || autoresSelecionadosIds.length === 0 || !premioId || !dataEnvio || !statusProjeto) {
+                alert('Por favor, preencha todos os campos obrigatórios (*).');
+                return;
+            }
+            
+            const premioSelecionadoObj = premiosDisponiveis.find(p => p.id == premioId);
+
+            const novoProjeto = {
+                id: Date.now(), // ID simulado
+                titulo: titulo,
+                areaTematica: areaTematica,
+                resumo: resumo,
+                autores: autoresSelecionados,
+                dataEnvio: dataEnvio,
+                statusProjeto: statusProjeto,
+                premioConcorrendo: {
+                    premioId: parseInt(premioId),
+                    nomePremio: premioSelecionadoObj ? `${premioSelecionadoObj.nome} ${premioSelecionadoObj.anoEdicao}` : 'N/A'
+                } 
+            };
+
+            console.log('Novo Projeto a ser criado:', novoProjeto);
+            alert(`Projeto "${novoProjeto.titulo}" pronto para ser salvo!\nConcorrendo ao prêmio: ${novoProjeto.premioConcorrendo.nomePremio}\n(Em uma aplicação real, estes dados seriam enviados para o servidor.)`);
+            
+            // event.target.reset();
+            // setDefaultDate();
+            // popularSelectAutores(); // Repopular caso algo mude
+            // popularSelectPremios();
+        });
+
+        function cancelarCriacao() {
+            if (confirm('Tem certeza que deseja cancelar a criação do projeto? Os dados não salvos serão perdidos.')) {
+                document.getElementById('formCriarProjeto').reset();
+                setDefaultDate();
+            }
+        }
+    </script>
+</body>
+</html>

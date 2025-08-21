@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listar Prêmios</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">Lista de Prêmios</h1>
+            <button onclick="window.location.href='criar_premio.html'" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors">
+                + Novo Prêmio
+            </button>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Filtros</h2>
+            <div class="grid md:grid-cols-3 gap-4">
+                <input 
+                    type="text" 
+                    id="filtroNome"
+                    placeholder="Filtrar por nome do prêmio" 
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500">
+                
+                <input 
+                    type="number" 
+                    id="filtroAnoEdicao"
+                    placeholder="Filtrar por ano da edição (AAAA)" 
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                
+                <select id="filtroStatus" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline focus:border-blue-500">
+                    <option value="">Todos os status</option>
+                    <option value="Futuro">Futuro</option>
+                    <option value="Em Andamento">Em Andamento</option>
+                    <option value="Encerrado">Encerrado</option>
+                </select>
+            </div>
+            <div class="mt-4">
+                <button id="limparFiltros" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+                    Limpar Filtros
+                </button>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <span id="contadorResultados" class="text-gray-700 font-medium"></span>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full border-collapse">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Nome do Prêmio</th>
+                            <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700 text-center">Ano Edição</th>
+                            <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Data Início</th>
+                            <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Data Fim</th>
+                            <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Status</th>
+                            <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaPremios">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="flex justify-between items-center mt-6">
+            <span id="infoPaginacao" class="text-gray-700"></span>
+            <div class="flex gap-2">
+                <button id="btnAnterior" class="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-bold py-2 px-4 rounded-l transition-colors">
+                    Anterior
+                </button>
+                <span id="numeroPagina" class="bg-gray-200 px-4 py-2 font-medium text-gray-700"></span>
+                <button id="btnProximo" class="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-bold py-2 px-4 rounded-r transition-colors">
+                    Próximo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simula a data atual para consistência nos exemplos.
+        // Em uma aplicação real, use new Date() diretamente.
+        // A data atual definida pelo sistema do usuário que executa o pensamento é: Quinta-feira, 22 de Maio de 2025
+        const CURRENT_DATE_FOR_STATUS = new Date("2025-05-22T00:00:00.000-03:00");
+
+
+        // Dados dos prêmios (exemplo)
+        const premios = [
+            {
+                id: 1,
+                nome: "Prêmio Inovação Tech",
+                descricao: "Reconhece inovações tecnológicas.",
+                cronograma: { dataInicio: "2025-03-01", dataFim: "2025-10-31", descricaoDetalhada: "Inscrições: 01/03 a 30/04. Avaliação: 01/05 a 31/08." },
+                anoEdicao: 2025
+            },
+            {
+                id: 2,
+                nome: "Prêmio Jovem Cientista",
+                descricao: "Incentiva jovens talentos na ciência.",
+                cronograma: { dataInicio: "2025-01-15", dataFim: "2025-05-20", descricaoDetalhada: "Fases de submissão e avaliação." },
+                anoEdicao: 2025
+            },
+            {
+                id: 3,
+                nome: "Prêmio Sustentabilidade Global",
+                descricao: "Projetos com impacto ambiental positivo.",
+                cronograma: { dataInicio: "2025-06-01", dataFim: "2025-12-15", descricaoDetalhada: "Detalhes sobre as etapas de seleção." },
+                anoEdicao: 2025
+            },
+            {
+                id: 4,
+                nome: "Prêmio Arte e Cultura",
+                descricao: "Celebra expressões artísticas.",
+                cronograma: { dataInicio: "2024-04-01", dataFim: "2024-11-30", descricaoDetalhada: "Edição anterior." },
+                anoEdicao: 2024 
+            },
+             {
+                id: 5,
+                nome: "Prêmio Excelência em Educação",
+                descricao: "Destaca iniciativas educacionais transformadoras.",
+                cronograma: { dataInicio: "2026-02-01", dataFim: "2026-09-30", descricaoDetalhada: "Inscrições abrem em breve." },
+                anoEdicao: 2026
+            },
+            {
+                id: 6,
+                nome: "Desafio Startups Inovadoras",
+                descricao: "Competição para novas startups com ideias disruptivas.",
+                cronograma: { dataInicio: "2025-04-10", dataFim: "2025-08-25", descricaoDetalhada: "Pitch day, mentoria e premiação." },
+                anoEdicao: 2025
+            },
+            {
+                id: 7,
+                nome: "Concurso Literário Nacional",
+                descricao: "Revelando novos talentos da literatura brasileira.",
+                cronograma: { dataInicio: "2024-08-01", dataFim: "2025-02-28", descricaoDetalhada: "Categorias: Conto, Poesia, Crônica." },
+                anoEdicao: 2024 // Este prêmio estaria 'Encerrado' para o ano de 2024 e parcialmente em 2025
+            }
+        ];
+
+        let premiosFiltrados = [...premios];
+        let paginaAtual = 1;
+        const itensPorPagina = 5;
+
+        function getPremioStatus(premio) {
+            const hoje = new Date(CURRENT_DATE_FOR_STATUS.toDateString()); // Normaliza para ignorar horas
+            const inicio = new Date(new Date(premio.cronograma.dataInicio).toDateString()); // Normaliza
+            const fim = new Date(new Date(premio.cronograma.dataFim).toDateString()); // Normaliza
+
+            if (hoje < inicio) return "Futuro";
+            if (hoje >= inicio && hoje <= fim) return "Em Andamento";
+            return "Encerrado";
+        }
+
+        function formatarData(dataString) {
+            const [ano, mes, dia] = dataString.split('-');
+            return `${dia}/${mes}/${ano}`;
+        }
+        
+        // Renderizar tabela
+        function renderizarTabela() {
+            const tabela = document.getElementById('tabelaPremios');
+            const inicio = (paginaAtual - 1) * itensPorPagina;
+            const fim = inicio + itensPorPagina;
+            const premiosPagina = premiosFiltrados.slice(inicio, fim);
+
+            tabela.innerHTML = premiosPagina.map(premio => {
+                const status = getPremioStatus(premio);
+                let statusClass = '';
+                switch(status) {
+                    case 'Futuro': statusClass = 'bg-blue-100 text-blue-800'; break;
+                    case 'Em Andamento': statusClass = 'bg-green-100 text-green-800'; break;
+                    case 'Encerrado': statusClass = 'bg-red-100 text-red-800'; break;
+                    default: statusClass = 'bg-gray-100 text-gray-800';
+                }
+                
+                return `
+                    <tr class="hover:bg-gray-50">
+                        <td class="border border-gray-300 px-4 py-3 font-medium">${premio.nome}</td>
+                        <td class="border border-gray-300 px-4 py-3 text-center">${premio.anoEdicao}</td>
+                        <td class="border border-gray-300 px-4 py-3">${formatarData(premio.cronograma.dataInicio)}</td>
+                        <td class="border border-gray-300 px-4 py-3">${formatarData(premio.cronograma.dataFim)}</td>
+                        <td class="border border-gray-300 px-4 py-3">
+                            <span class="${statusClass} px-2 py-1 rounded-full text-xs font-medium">
+                                ${status}
+                            </span>
+                        </td>
+                        <td class="border border-gray-300 px-4 py-3">
+                            <button onclick="visualizarPremio(${premio.id})" class="text-blue-600 hover:text-blue-800 font-medium mr-3 text-sm">
+                                Detalhes
+                            </button>
+                            <button onclick="editarPremio(${premio.id})" class="text-green-600 hover:text-green-800 font-medium text-sm">
+                                Editar
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            atualizarPaginacao();
+            atualizarContador();
+        }
+
+        // Atualizar paginação
+        function atualizarPaginacao() {
+            const totalPaginas = Math.ceil(premiosFiltrados.length / itensPorPagina);
+            const inicio = (paginaAtual - 1) * itensPorPagina + 1;
+            const fim = Math.min(paginaAtual * itensPorPagina, premiosFiltrados.length);
+
+            document.getElementById('infoPaginacao').textContent = 
+                premiosFiltrados.length > 0 ? `Mostrando ${inicio} a ${fim} de ${premiosFiltrados.length} prêmios` : 'Nenhum prêmio encontrado';
+            document.getElementById('numeroPagina').textContent = totalPaginas > 0 ? `${paginaAtual} / ${totalPaginas}` : '0 / 0';
+            
+            document.getElementById('btnAnterior').disabled = paginaAtual === 1;
+            document.getElementById('btnProximo').disabled = paginaAtual === totalPaginas || totalPaginas === 0;
+        }
+
+        // Atualizar contador
+        function atualizarContador() {
+            const total = premiosFiltrados.length;
+            const emAndamento = premiosFiltrados.filter(p => getPremioStatus(p) === 'Em Andamento').length;
+            const futuros = premiosFiltrados.filter(p => getPremioStatus(p) === 'Futuro').length;
+            
+            document.getElementById('contadorResultados').textContent = 
+                `${total} prêmios encontrados (${emAndamento} em andamento, ${futuros} futuros)`;
+        }
+
+        // Aplicar filtros
+        function aplicarFiltros() {
+            const filtroNome = document.getElementById('filtroNome').value.toLowerCase();
+            const filtroAno = document.getElementById('filtroAnoEdicao').value;
+            const filtroStatusSelecionado = document.getElementById('filtroStatus').value;
+
+            premiosFiltrados = premios.filter(premio => {
+                const matchNome = premio.nome.toLowerCase().includes(filtroNome);
+                const matchAno = !filtroAno || premio.anoEdicao.toString() === filtroAno;
+                const matchStatus = !filtroStatusSelecionado || getPremioStatus(premio) === filtroStatusSelecionado;
+                
+                return matchNome && matchAno && matchStatus;
+            });
+
+            paginaAtual = 1;
+            renderizarTabela();
+        }
+
+        // Limpar filtros
+        function limparFiltros() {
+            document.getElementById('filtroNome').value = '';
+            document.getElementById('filtroAnoEdicao').value = '';
+            document.getElementById('filtroStatus').value = '';
+            premiosFiltrados = [...premios];
+            paginaAtual = 1;
+            renderizarTabela();
+        }
+
+        function visualizarPremio(id) {
+            alert(`Visualizando detalhes do prêmio ID: ${id} (funcionalidade a ser implementada)`);
+        }
+
+        function editarPremio(id) {
+            alert(`Editando prêmio ID: ${id} (funcionalidade a ser implementada)`);
+        }
+
+        // Event listeners
+        document.getElementById('filtroNome').addEventListener('input', aplicarFiltros);
+        document.getElementById('filtroAnoEdicao').addEventListener('input', aplicarFiltros);
+        document.getElementById('filtroStatus').addEventListener('change', aplicarFiltros);
+        document.getElementById('limparFiltros').addEventListener('click', limparFiltros);
+
+        document.getElementById('btnAnterior').addEventListener('click', () => {
+            if (paginaAtual > 1) {
+                paginaAtual--;
+                renderizarTabela();
+            }
+        });
+
+        document.getElementById('btnProximo').addEventListener('click', () => {
+            const totalPaginas = Math.ceil(premiosFiltrados.length / itensPorPagina);
+            if (paginaAtual < totalPaginas) {
+                paginaAtual++;
+                renderizarTabela();
+            }
+        });
+
+        // Inicializar
+        renderizarTabela();
+    </script>
+</body>
+</html>

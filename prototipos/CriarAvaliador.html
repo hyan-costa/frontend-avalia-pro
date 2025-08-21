@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Novo Avaliador</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .error {
+            border-color: #ef4444;
+        }
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        .success {
+            border-color: #10b981;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="max-w-4xl mx-auto p-6">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-4">
+                <button onclick="history.back()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                    ← Voltar
+                </button>
+                <h1 class="text-3xl font-bold text-gray-800">Criar Novo Avaliador</h1>
+            </div>
+        </div>
+
+        <!-- Formulário -->
+        <form id="formAvaliador" class="space-y-6">
+            <!-- Informações Pessoais -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4 border-b pb-2">Informações Pessoais</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="form-group">
+                        <label for="nomeCompleto" class="block text-sm font-medium text-gray-700 mb-2">
+                            Nome Completo <span class="text-red-500">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="nomeCompleto" 
+                            name="nomeCompleto" 
+                            required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="Digite o nome completo">
+                        <div class="error-message" id="nomeCompletoError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                            E-mail <span class="text-red-500">*</span>
+                        </label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="exemplo@email.com">
+                        <div class="error-message" id="emailError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cpf" class="block text-sm font-medium text-gray-700 mb-2">
+                            CPF <span class="text-red-500">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="cpf" 
+                            name="cpf" 
+                            required
+                            maxlength="14"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="000.000.000-00">
+                        <div class="error-message" id="cpfError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefone" class="block text-sm font-medium text-gray-700 mb-2">
+                            Telefone <span class="text-red-500">*</span>
+                        </label>
+                        <input 
+                            type="tel" 
+                            id="telefone" 
+                            name="telefone" 
+                            required
+                            maxlength="15"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="(00) 00000-0000">
+                        <div class="error-message" id="telefoneError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dataNascimento" class="block text-sm font-medium text-gray-700 mb-2">
+                            Data de Nascimento
+                        </label>
+                        <input 
+                            type="date" 
+                            id="dataNascimento" 
+                            name="dataNascimento"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="genero" class="block text-sm font-medium text-gray-700 mb-2">
+                            Gênero
+                        </label>
+                        <select 
+                            id="genero" 
+                            name="genero"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">Selecione</option>
+                            <option value="masculino">Masculino</option>
+                            <option value="feminino">Feminino</option>
+                            <option value="outros">Outros</option>
+                            <option value="nao-informar">Prefiro não informar</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informações Profissionais -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4 border-b pb-2">Informações Profissionais</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="form-group">
+                        <label for="instituicao" class="block text-sm font-medium text-gray-700 mb-2">
+                            Instituição <span class="text-red-500">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="instituicao" 
+                            name="instituicao" 
+                            required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="Nome da instituição">
+                        <div class="error-message" id="instituicaoError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cargo" class="block text-sm font-medium text-gray-700 mb-2">
+                            Cargo/Função <span class="text-red-500">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="cargo" 
+                            name="cargo" 
+                            required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="Ex: Professor Doutor, Pesquisador">
+                        <div class="error-message" id="cargoError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="areaAtuacao" class="block text-sm font-medium text-gray-700 mb-2">
+                            Área de Atuação <span class="text-red-500">*</span>
+                        </label>
+                        <select 
+                            id="areaAtuacao" 
+                            name="areaAtuacao" 
+                            required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">Selecione uma área</option>
+                            <option value="Tecnologia">Tecnologia</option>
+                            <option value="Ciências">Ciências</option>
+                            <option value="Educação">Educação</option>
+                            <option value="Arte">Arte</option>
+                            <option value="Engenharia">Engenharia</option>
+                            <option value="Saúde">Saúde</option>
+                            <option value="Administração">Administração</option>
+                            <option value="Direito">Direito</option>
+                            <option value="Economia">Economia</option>
+                        </select>
+                        <div class="error-message" id="areaAtuacaoError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="experiencia" class="block text-sm font-medium text-gray-700 mb-2">
+                            Tempo de Experiência (anos)
+                        </label>
+                        <input 
+                            type="number" 
+                            id="experiencia" 
+                            name="experiencia"
+                            min="0"
+                            max="50"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="Ex: 15">
+                    </div>
+
+                    <div class="form-group md:col-span-2">
+                        <label for="especializacoes" class="block text-sm font-medium text-gray-700 mb-2">
+                            Especializações/Competências
+                        </label>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-2" id="especializacoesContainer">
+                            <label class="flex items-center">
+                                <input type="checkbox" name="especializacoes" value="Desenvolvimento Web" class="mr-2">
+                                <span class="text-sm">Desenvolvimento Web</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="especializacoes" value="Inteligência Artificial" class="mr-2">
+                                <span class="text-sm">Inteligência Artificial</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="especializacoes" value="Machine Learning" class="mr-2">
+                                <span class="text-sm">Machine Learning</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="especializacoes" value="Banco de Dados" class="mr-2">
+                                <span class="text-sm">Banco de Dados</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="especializacoes" value="Segurança da Informação" class="mr-2">
+                                <span class="text-sm">Segurança da Informação</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="especializacoes" value="Sistemas Distribuídos" class="mr-2">
+                                <span class="text-sm">Sistemas Distribuídos</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="especializacoes" value="Mobile" class="mr-2">
+                                <span class="text-sm">Desenvolvimento Mobile</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="especializacoes" value="DevOps" class="mr-2">
+                                <span class="text-sm">DevOps</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="especializacoes" value="UX/UI" class="mr-2">
+                                <span class="text-sm">UX/UI Design</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <!-- Botões de Ação -->
+            <div class="flex justify-end gap-4 pt-6">
+                <button 
+                    type="button" 
+                    onclick="history.back()"
+                    class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                    Cancelar
+                </button>
+                <button 
+                    type="submit"
+                    class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                    Criar Avaliador
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Modal de Confirmação -->
+    <div id="modalConfirmacao" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">
+                    ✓
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800">Avaliador Criado com Sucesso!</h3>
+            </div>
+            <p class="text-gray-600 mb-6">O avaliador foi cadastrado no sistema e está disponível para atribuição de projetos.</p>
+            <div class="flex gap-3">
+                <button onclick="fecharModal()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg transition-colors">
+                    Fechar
+                </button>
+                <button onclick="criarOutro()" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition-colors">
+                    Criar Outro
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Máscaras para CPF e telefone
+        document.getElementById('cpf').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            e.target.value = value;
+        });
+
+        document.getElementById('telefone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/(\d{2})(\d)/, '($1) $2');
+            value = value.replace(/(\d{5})(\d)/, '$1-$2');
+            e.target.value = value;
+        });
+
+        // Adicionar nova formação
+        function adicionarFormacao() {
+            const container = document.getElementById('formacoesContainer');
+            const novaFormacao = document.querySelector('.formacao-item').cloneNode(true);
+            
+            // Limpar valores dos campos
+            novaFormacao.querySelectorAll('input, select').forEach(input => {
+                input.value = '';
+            });
+            
+            container.appendChild(novaFormacao);
+        }
+
+        // Remover formação
+        function removerFormacao(button) {
+            const formacoesItems = document.querySelectorAll('.formacao-item');
+            if (formacoesItems.length > 1) {
+                button.closest('.formacao-item').remove();
+            } else {
+                alert('Deve haver pelo menos uma formação cadastrada.');
+            }
+        }
+
+        // Validação do formulário
+        function validarFormulario() {
+            let isValid = true;
+            const requiredFields = ['nomeCompleto', 'email', 'cpf', 'telefone', 'instituicao', 'cargo', 'areaAtuacao'];
+            
+            requiredFields.forEach(field => {
+                const input = document.getElementById(field);
+                const errorDiv = document.getElementById(field + 'Error');
+                
+                if (!input.value.trim()) {
+                    input.classList.add('error');
+                    errorDiv.textContent = 'Este campo é obrigatório.';
+                    isValid = false;
+                } else {
+                    input.classList.remove('error');
+                    input.classList.add('success');
+                    errorDiv.textContent = '';
+                }
+            });
+
+            // Validação específica do email
+            const email = document.getElementById('email');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (email.value && !emailRegex.test(email.value)) {
+                email.classList.add('error');
+                document.getElementById('emailError').textContent = 'Digite um e-mail válido.';
+                isValid = false;
+            }
+
+            // Validação do CPF
+            const cpf = document.getElementById('cpf');
+            if (cpf.value && cpf.value.replace(/\D/g, '').length !== 11) {
+                cpf.classList.add('error');
+                document.getElementById('cpfError').textContent = 'CPF deve ter 11 dígitos.';
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        // Salvar rascunho
+        function salvarRascunho() {
+            const formData = new FormData(document.getElementById('formAvaliador'));
+            localStorage.setItem('rascunhoAvaliador', JSON.stringify(Object.fromEntries(formData)));
+            
+            // Mostrar feedback
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = 'Rascunho Salvo!';
+            btn.classList.remove('bg-yellow-500', 'hover:bg-yellow-600');
+            btn.classList.add('bg-green-500', 'hover:bg-green-600');
+            
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.classList.remove('bg-green-500', 'hover:bg-green-600');
+                btn.classList.add('bg-yellow-500', 'hover:bg-yellow-600');
+            }, 2000);
+        }
+
+        // Carregar rascunho ao carregar a página
+        window.addEventListener('load', function() {
+            const rascunho = localStorage.getItem('rascunhoAvaliador');
+            if (rascunho) {
+                const data = JSON.parse(rascunho);
+                for (const [key, value] of Object.entries(data)) {
+                    const input = document.querySelector(`[name="${key}"]`);
+                    if (input) {
+                        if (input.type === 'checkbox') {
+                            input.checked = value === input.value;
+                        } else {
+                            input.value = value;
+                        }
+                    }
+                }
+            }
+        });
+
+        // Submissão do formulário
+        document.getElementById('formAvaliador').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (validarFormulario()) {
+                // Simular envio
+                const btn = document.querySelector('button[type="submit"]');
+                btn.textContent = 'Criando...';
+                btn.disabled = true;
+                
+                setTimeout(() => {
+                    document.getElementById('modalConfirmacao').classList.remove('hidden');
+                    document.getElementById('modalConfirmacao').classList.add('flex');
+                    localStorage.removeItem('rascunhoAvaliador'); // Limpar rascunho
+                }, 1500);
+            }
+        });
+
+        // Fechar modal
+        function fecharModal() {
+            document.getElementById('modalConfirmacao').classList.add('hidden');
+            document.getElementById('modalConfirmacao').classList.remove('flex');
+            window.location.href = '/avaliadores'; // Redirecionar para lista
+        }
+
+        // Criar outro avaliador
+        function criarOutro() {
+            document.getElementById('modalConfirmacao').classList.add('hidden');
+            document.getElementById('modalConfirmacao').classList.remove('flex');
+            document.getElementById('formAvaliador').reset();
+            window.scrollTo(0, 0);
+            
+            // Resetar estados de validação
+            document.querySelectorAll('.error, .success').forEach(el => {
+                el.classList.remove('error', 'success');
+            });
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.textContent = '';
+            });
+        }
+
+        // Validação em tempo real
+        document.querySelectorAll('input[required], select[required]').forEach(input => {
+            input.addEventListener('blur', function() {
+                const errorDiv = document.getElementById(this.id + 'Error');
+                if (this.value.trim()) {
+                    this.classList.remove('error');
+                    this.classList.add('success');
+                    if (errorDiv) errorDiv.textContent = '';
+                } else {
+                    this.classList.add('error');
+                    this.classList.remove('success');
+                    if (errorDiv) errorDiv.textContent = 'Este campo é obrigatório.';
+                }
+            });
+        });
+    </script>
+</body>
+</html
