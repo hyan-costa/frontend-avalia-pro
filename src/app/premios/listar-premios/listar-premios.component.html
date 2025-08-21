@@ -1,0 +1,129 @@
+
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="text-3xl font-bold text-gray-800">Lista de Prêmios</h1>
+    <button routerLink="/premios/criar" class="btn btn-primary">
+      + Novo Prêmio
+    </button>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h2 class="card-title">Filtrar Prêmios</h2>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Por nome do prêmio"
+            [(ngModel)]="filtroNome"
+            (input)="aplicarFiltros()"
+          />
+        </div>
+        <div class="col-md-6">
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Por ano de edição"
+            [(ngModel)]="filtroAnoEdicao"
+            (input)="aplicarFiltros()"
+          />
+        </div>
+      </div>
+      <div class="mt-3">
+        <button class="btn btn-secondary" (click)="limparFiltros()">
+          Limpar Filtros
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <span class="text-muted"
+      >{{ premiosFiltrados.length }} prêmio(s) encontrado(s).</span
+    >
+  </div>
+
+  <div class="card">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover mb-0">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Ano Edição</th>
+              <th>Data Início</th>
+              <th>Data Fim</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="premiosPaginados.length === 0">
+              <td colspan="6" class="text-center text-muted py-4">
+                Nenhum prêmio encontrado com os filtros atuais.
+              </td>
+            </tr>
+            <tr *ngFor="let premio of premiosPaginados">
+              <td>{{ premio.nome }}</td>
+              <td>{{ premio.anoEdicao }}</td>
+              <td>{{ formatarDataSimples(premio.dataInicio) }}</td>
+              <td>{{ formatarDataSimples(premio.dataFim) }}</td>
+              <td>
+                <span
+                  class="badge"
+                  [class.bg-success]="getStatusPremio(premio) === 'Em Andamento'"
+                  [class.bg-warning]="getStatusPremio(premio) === 'Futuro'"
+                  [class.bg-danger]="getStatusPremio(premio) === 'Encerrado' || getStatusPremio(premio) === 'Inativo'"
+                  >{{ getStatusPremio(premio) }}</span
+                >
+              </td>
+              <td>
+                <button
+                  class="btn btn-sm btn-info me-2"
+                  (click)="visualizarDetalhesPremio(premio.id)"
+                >
+                  Detalhes
+                </button>
+                <button
+                  class="btn btn-sm btn-warning me-2"
+                  (click)="editarPremio(premio.id)"
+                >
+                  Editar
+                </button>
+                <button
+                  class="btn btn-sm btn-danger"
+                  (click)="excluirPremio(premio.id)"
+                >
+                  Excluir
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="d-flex justify-content-between align-items-center mt-4"
+    *ngIf="premiosFiltrados.length > 0"
+  >
+    <span class="text-muted"
+      >Página {{ paginaAtual }} de {{ totalPaginas }}</span
+    >
+    <nav>
+      <ul class="pagination mb-0">
+        <li class="page-item" [class.disabled]="paginaAtual === 1">
+          <a class="page-link" (click)="paginaAnterior()">Anterior</a>
+        </li>
+        <li
+          class="page-item"
+          [class.disabled]="paginaAtual === totalPaginas"
+        >
+          <a class="page-link" (click)="proximaPagina()">Próximo</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>

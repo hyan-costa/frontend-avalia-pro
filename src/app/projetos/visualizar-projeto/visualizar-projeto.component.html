@@ -1,0 +1,64 @@
+
+<div class="container mt-5">
+  <div class="d-flex align-items-center mb-4">
+    <button (click)="voltar()" class="btn btn-secondary me-3">
+      <i class="bi bi-arrow-left"></i> Voltar
+    </button>
+    <h1 class="text-3xl font-bold text-gray-800">Detalhes do Projeto</h1>
+  </div>
+
+  <div class="card" *ngIf="projeto">
+    <div class="card-body">
+      <h2 class="card-title text-primary mb-3">{{ projeto.titulo }}</h2>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <p><strong>ID:</strong> {{ projeto.id }}</p>
+          <p><strong>Área Temática:</strong> {{ projeto.areaTematica }}</p>
+          <p><strong>Data de Cadastro:</strong> {{ formatarDataSimples(projeto.dataCadastro) }}</p>
+          <p><strong>Status:</strong>
+            <span class="badge"
+                  [class.bg-success]="projeto.status"
+                  [class.bg-danger]="!projeto.status">
+              {{ projeto.status ? 'Ativo' : 'Inativo' }}
+            </span>
+          </p>
+        </div>
+        <div class="col-md-6">
+          <p><strong>Situação:</strong> {{ projeto.situacao }}</p>
+          <p><strong>Nota:</strong> {{ projeto.nota || 'Não avaliado' }}</p>
+          <p><strong>Prêmio:</strong> {{ projeto.premio.nome || 'N/A' }}</p>
+          <p><strong>Avaliador:</strong> {{ projeto.avaliador?.nome || 'Não atribuído' }}</p>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <h5>Resumo:</h5>
+        <p class="bg-light p-3 rounded-3">{{ projeto.resumo }}</p>
+      </div>
+
+      <div class="mb-3" *ngIf="projeto.parecerDescritivo">
+        <h5>Parecer Descritivo:</h5>
+        <p class="bg-light p-3 rounded-3">{{ projeto.parecerDescritivo }}</p>
+      </div>
+
+      <div class="mb-3">
+        <h5>Autores:</h5>
+        <p>{{ formatarListaNomes(projeto.autores) }}</p>
+      </div>
+
+      <div class="d-flex justify-content-end gap-2 mt-4">
+        <button class="btn btn-warning" [routerLink]="['/projetos', projeto.id, 'editar']">
+          Editar Projeto
+        </button>
+        <button class="btn btn-info" [routerLink]="['/projetos', projeto.id, 'avaliar']">
+          Avaliar Projeto
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-warning" role="alert" *ngIf="!projeto">
+    Projeto não encontrado ou não disponível.
+  </div>
+</div>

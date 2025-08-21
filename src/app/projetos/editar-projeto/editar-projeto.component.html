@@ -1,0 +1,200 @@
+
+<div class="container mt-5">
+  <div class="d-flex align-items-center mb-4">
+    <button
+      (click)="cancelarEdicao()"
+      class="btn btn-secondary me-3"
+    >
+      <i class="bi bi-arrow-left"></i> Voltar
+    </button>
+    <h1 class="text-3xl font-bold text-gray-800">Editar Projeto</h1>
+  </div>
+
+  <div class="card" *ngIf="projetoAtual.id">
+    <div class="card-body">
+      <form (ngSubmit)="onSalvarProjeto()">
+        <div class="mb-3">
+          <label for="tituloProjeto" class="form-label"
+            >Título do Projeto <span class="text-danger">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="tituloProjeto"
+            name="tituloProjeto"
+            [(ngModel)]="projetoAtual.titulo"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="areaTematica" class="form-label"
+            >Área Temática <span class="text-danger">*</span></label
+          >
+          <select
+            class="form-select"
+            id="areaTematica"
+            name="areaTematica"
+            [(ngModel)]="projetoAtual.areaTematica"
+            required
+          >
+            <option *ngFor="let area of areaTematicaOptions" [value]="area">
+              {{ area | titlecase }}
+            </option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="resumoProjeto" class="form-label"
+            >Resumo <span class="text-danger">*</span></label
+          >
+          <textarea
+            class="form-control"
+            id="resumoProjeto"
+            name="resumoProjeto"
+            rows="5"
+            [(ngModel)]="projetoAtual.resumo"
+            required
+          ></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="autoresProjeto" class="form-label"
+            >Autores <span class="text-danger">*</span> (Segure Ctrl/Cmd para
+            selecionar múltiplos)</label
+          >
+          <select
+            class="form-select"
+            id="autoresProjeto"
+            name="autoresProjeto"
+            [(ngModel)]="projetoAtual.autores"
+            multiple
+            required
+          >
+            <option *ngFor="let autor of autoresDisponiveis" [ngValue]="autor">
+              {{ autor.nome }}
+            </option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="premioConcorrendo" class="form-label"
+            >Prêmio ao qual concorre <span class="text-danger">*</span></label
+          >
+          <select
+            class="form-select"
+            id="premioConcorrendo"
+            name="premioConcorrendo"
+            [(ngModel)]="projetoAtual.premioId"
+            required
+          >
+            <option [value]="0" disabled>Selecione um prêmio...</option>
+            <option *ngFor="let premio of premiosDisponiveis" [value]="premio.id">
+              {{ premio.nome }} ({{ premio.anoEdicao }})
+            </option>
+          </select>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="dataCadastro" class="form-label"
+              >Data de Cadastro <span class="text-danger">*</span></label
+            >
+            <input
+              type="date"
+              class="form-control"
+              id="dataCadastro"
+              name="dataCadastro"
+              [ngModel]="projetoAtual.dataCadastro | date:'yyyy-MM-dd'"
+              (ngModelChange)="projetoAtual.dataCadastro = $event"
+              required
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="situacaoProjeto" class="form-label"
+              >Situação <span class="text-danger">*</span></label
+            >
+            <select
+              class="form-select"
+              id="situacaoProjeto"
+              name="situacaoProjeto"
+              [(ngModel)]="projetoAtual.situacao"
+              required
+            >
+              <option
+                *ngFor="let situacao of situacaoProjetoOptions"
+                [value]="situacao"
+              >
+                {{ situacao | titlecase }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mb-3 mt-3">
+          <label for="avaliador" class="form-label">Avaliador</label>
+          <select
+            class="form-select"
+            id="avaliador"
+            name="avaliador"
+            [(ngModel)]="projetoAtual.avaliadorId"
+          >
+            <option [value]="null">Nenhum</option>
+            <option *ngFor="let avaliador of avaliadoresDisponiveis" [value]="avaliador.id">
+              {{ avaliador.nome }}
+            </option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="nota" class="form-label">Nota</label>
+          <input
+            type="number"
+            class="form-control"
+            id="nota"
+            name="nota"
+            [(ngModel)]="projetoAtual.nota"
+            min="0"
+            max="10"
+            step="0.1"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="parecerDescritivo" class="form-label">Parecer Descritivo</label>
+          <textarea
+            class="form-control"
+            id="parecerDescritivo"
+            name="parecerDescritivo"
+            rows="5"
+            [(ngModel)]="projetoAtual.parecerDescritivo"
+          ></textarea>
+        </div>
+
+        <div class="form-check mb-3">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="statusProjeto"
+            name="statusProjeto"
+            [(ngModel)]="projetoAtual.status"
+          />
+          <label class="form-check-label" for="statusProjeto">Ativo</label>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2 mt-4">
+          <button type="button" class="btn btn-secondary" (click)="cancelarEdicao()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary">
+            Salvar Alterações
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="alert alert-warning" role="alert" *ngIf="!projetoAtual.id">
+    Projeto não encontrado ou não disponível para edição.
+  </div>
+</div>

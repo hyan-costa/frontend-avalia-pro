@@ -1,0 +1,145 @@
+
+<div class="container mt-5">
+  <div class="d-flex align-items-center mb-4">
+    <button
+      (click)="cancelarCriacao()"
+      class="btn btn-secondary me-3"
+    >
+      <i class="bi bi-arrow-left"></i> Voltar
+    </button>
+    <h1 class="text-3xl font-bold text-gray-800">Criar Novo Projeto</h1>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <form (ngSubmit)="onCriarProjeto()">
+        <div class="mb-3">
+          <label for="tituloProjeto" class="form-label"
+            >Título do Projeto <span class="text-danger">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="tituloProjeto"
+            name="tituloProjeto"
+            [(ngModel)]="novoProjeto.titulo"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="areaTematica" class="form-label"
+            >Área Temática <span class="text-danger">*</span></label
+          >
+          <select
+            class="form-select"
+            id="areaTematica"
+            name="areaTematica"
+            [(ngModel)]="novoProjeto.areaTematica"
+            required
+          >
+            <option *ngFor="let area of areaTematicaOptions" [value]="area">
+              {{ area | titlecase }}
+            </option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="resumoProjeto" class="form-label"
+            >Resumo <span class="text-danger">*</span></label
+          >
+          <textarea
+            class="form-control"
+            id="resumoProjeto"
+            name="resumoProjeto"
+            rows="5"
+            [(ngModel)]="novoProjeto.resumo"
+            required
+          ></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="autoresProjeto" class="form-label"
+            >Autores <span class="text-danger">*</span> (Segure Ctrl/Cmd para
+            selecionar múltiplos)</label
+          >
+          <select
+            class="form-select"
+            id="autoresProjeto"
+            name="autoresProjeto"
+            [(ngModel)]="novoProjeto.autores"
+            multiple
+            required
+          >
+            <option *ngFor="let autor of autoresDisponiveis" [ngValue]="autor">
+              {{ autor.nome }}
+            </option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="premioConcorrendo" class="form-label"
+            >Prêmio ao qual concorre <span class="text-danger">*</span></label
+          >
+          <select
+            class="form-select"
+            id="premioConcorrendo"
+            name="premioConcorrendo"
+            [(ngModel)]="novoProjeto.premioId"
+            required
+          >
+            <option [value]="0" disabled selected>Selecione um prêmio...</option>
+            <option *ngFor="let premio of premiosDisponiveis" [value]="premio.id">
+              {{ premio.nome }} ({{ premio.anoEdicao }})
+            </option>
+          </select>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="dataCadastro" class="form-label"
+              >Data de Cadastro <span class="text-danger">*</span></label
+            >
+            <input
+              type="date"
+              class="form-control"
+              id="dataCadastro"
+              name="dataCadastro"
+              [ngModel]="novoProjeto.dataCadastro | date:'yyyy-MM-dd'"
+              (ngModelChange)="novoProjeto.dataCadastro = $event"
+              required
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="situacaoProjeto" class="form-label"
+              >Situação Inicial <span class="text-danger">*</span></label
+            >
+            <select
+              class="form-select"
+              id="situacaoProjeto"
+              name="situacaoProjeto"
+              [(ngModel)]="novoProjeto.situacao"
+              required
+            >
+              <option
+                *ngFor="let situacao of situacaoProjetoOptions"
+                [value]="situacao"
+              >
+                {{ situacao | titlecase }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2 mt-4">
+          <button type="button" class="btn btn-secondary" (click)="cancelarCriacao()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary">
+            Salvar Projeto
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

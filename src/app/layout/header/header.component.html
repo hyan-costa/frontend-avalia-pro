@@ -1,0 +1,36 @@
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    <a class="navbar-brand" routerLink="/">AvaliaPro</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/projetos" routerLinkActive="active">Projetos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/autores" routerLinkActive="active">Autores</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/avaliadores" routerLinkActive="active">Avaliadores</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/premios" routerLinkActive="active">Prêmios</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav">
+        <li class="nav-item" *ngIf="authService.isAuthenticated()">
+          <a class="nav-link" (click)="onLogout()" style="cursor: pointer;">Sair</a>
+        </li>
+        <li class="nav-item" *ngIf="!authService.isAuthenticated()">
+          <a class="nav-link" routerLink="/login">Login</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

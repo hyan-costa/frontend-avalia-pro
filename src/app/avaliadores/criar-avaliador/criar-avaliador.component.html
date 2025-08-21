@@ -1,0 +1,171 @@
+
+<div class="container mt-5">
+  <div class="d-flex align-items-center mb-4">
+    <button
+      (click)="cancelarCriacao()"
+      class="btn btn-secondary me-3"
+    >
+      <i class="bi bi-arrow-left"></i> Voltar
+    </button>
+    <h1 class="text-3xl font-bold text-gray-800">Criar Novo Avaliador</h1>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <form (ngSubmit)="onCriarAvaliador()">
+        <div class="mb-3">
+          <label for="nomeAvaliador" class="form-label"
+            >Nome Completo <span class="text-danger">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="nomeAvaliador"
+            name="nomeAvaliador"
+            [(ngModel)]="novoAvaliador.nome"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="emailAvaliador" class="form-label"
+            >E-mail <span class="text-danger">*</span></label
+          >
+          <input
+            type="email"
+            class="form-control"
+            id="emailAvaliador"
+            name="emailAvaliador"
+            [(ngModel)]="novoAvaliador.email"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="cpfAvaliador" class="form-label"
+            >CPF <span class="text-danger">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="cpfAvaliador"
+            name="cpfAvaliador"
+            [(ngModel)]="novoAvaliador.cpf"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="telefoneAvaliador" class="form-label"
+            >Telefone <span class="text-danger">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="telefoneAvaliador"
+            name="telefoneAvaliador"
+            [(ngModel)]="novoAvaliador.telefone"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="dataNascimento" class="form-label"
+            >Data de Nascimento <span class="text-danger">*</span></label
+          >
+          <input
+            type="date"
+            class="form-control"
+            id="dataNascimento"
+            name="dataNascimento"
+            [ngModel]="novoAvaliador.dataNascimento | date:'yyyy-MM-dd'"
+            (ngModelChange)="novoAvaliador.dataNascimento = $event"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="generoAvaliador" class="form-label"
+            >Gênero <span class="text-danger">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="generoAvaliador"
+            name="generoAvaliador"
+            [(ngModel)]="novoAvaliador.genero"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="instituicaoAvaliador" class="form-label"
+            >Instituição <span class="text-danger">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="instituicaoAvaliador"
+            name="instituicaoAvaliador"
+            [(ngModel)]="novoAvaliador.instituicao"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="areaAtuacao" class="form-label"
+            >Área de Atuação <span class="text-danger">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="areaAtuacao"
+            name="areaAtuacao"
+            [(ngModel)]="novoAvaliador.areaAtuacao"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="areaEspecializacao" class="form-label"
+            >Área de Especialização <span class="text-danger">*</span></label
+          >
+          <select
+            class="form-select"
+            id="areaEspecializacao"
+            name="areaEspecializacao"
+            [(ngModel)]="novoAvaliador.areaEspecializacao"
+            required
+          >
+            <option
+              *ngFor="let area of areaEspecializacaoOptions"
+              [value]="area"
+            >
+              {{ area | titlecase }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-check mb-3">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="statusAvaliador"
+            name="statusAvaliador"
+            [(ngModel)]="novoAvaliador.status"
+          />
+          <label class="form-check-label" for="statusAvaliador">Ativo</label>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2 mt-4">
+          <button type="button" class="btn btn-secondary" (click)="cancelarCriacao()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary">
+            Salvar Avaliador
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

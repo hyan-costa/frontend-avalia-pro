@@ -1,0 +1,108 @@
+
+<div class="container mt-5">
+  <div class="d-flex align-items-center mb-4">
+    <button
+      (click)="cancelarCriacao()"
+      class="btn btn-secondary me-3"
+    >
+      <i class="bi bi-arrow-left"></i> Voltar
+    </button>
+    <h1 class="text-3xl font-bold text-gray-800">Criar Novo Autor</h1>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <form (ngSubmit)="onCriarAutor()">
+        <div class="mb-3">
+          <label for="nomeAutor" class="form-label"
+            >Nome Completo <span class="text-danger">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="nomeAutor"
+            name="nomeAutor"
+            [(ngModel)]="novoAutor.nome"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="emailAutor" class="form-label"
+            >E-mail <span class="text-danger">*</span></label
+          >
+          <input
+            type="email"
+            class="form-control"
+            id="emailAutor"
+            name="emailAutor"
+            [(ngModel)]="novoAutor.email"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="cpfAutor" class="form-label"
+            >CPF <span class="text-danger">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="cpfAutor"
+            name="cpfAutor"
+            [(ngModel)]="novoAutor.cpf"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="telefoneAutor" class="form-label"
+            >Telefone <span class="text-danger">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="telefoneAutor"
+            name="telefoneAutor"
+            [(ngModel)]="novoAutor.telefone"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="instituicaoAutor" class="form-label"
+            >Instituição <span class="text-danger">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="instituicaoAutor"
+            name="instituicaoAutor"
+            [(ngModel)]="novoAutor.instituicao"
+            required
+          />
+        </div>
+
+        <div class="form-check mb-3">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="statusAutor"
+            name="statusAutor"
+            [(ngModel)]="novoAutor.status"
+          />
+          <label class="form-check-label" for="statusAutor">Ativo</label>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2 mt-4">
+          <button type="button" class="btn btn-secondary" (click)="cancelarCriacao()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary">
+            Salvar Autor
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

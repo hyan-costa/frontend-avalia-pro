@@ -1,0 +1,128 @@
+
+<div class="container mt-5">
+  <div class="d-flex align-items-center mb-4">
+    <button
+      (click)="cancelarAvaliacao()"
+      class="btn btn-secondary me-3"
+    >
+      <i class="bi bi-arrow-left"></i> Voltar
+    </button>
+    <h1 class="text-3xl font-bold text-gray-800">Avaliar Projeto</h1>
+  </div>
+
+  <div class="card mb-4" *ngIf="projeto">
+    <div class="card-body">
+      <h2 class="card-title text-primary" id="infoTituloProjeto">
+        {{ projeto.titulo }}
+      </h2>
+      <div class="row">
+        <div class="col-md-6">
+          <p><strong>Área Temática:</strong> {{ projeto.areaTematica }}</p>
+          <p>
+            <strong>Prêmio Concorrendo:</strong>
+            {{ projeto.premio?.nome || 'Nenhum' }}
+          </p>
+          <p><strong>Autores:</strong> {{ formatarListaNomes(projeto.autores) }}</p>
+        </div>
+        <div class="col-md-6">
+          <p><strong>Status Atual do Projeto:</strong> {{ projeto.situacao }}</p>
+          <p><strong>Nota Atual:</strong> {{ projeto.nota || 'Não avaliado' }}</p>
+          <p><strong>Avaliador Atual:</strong> {{ projeto.avaliador?.nome || 'Não atribuído' }}</p>
+        </div>
+      </div>
+      <div class="mt-3">
+        <strong>Resumo:</strong>
+        <p class="bg-light p-3 rounded-3 overflow-auto" style="max-height: 150px;">
+          {{ projeto.resumo }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <form (ngSubmit)="onAvaliarProjeto()">
+        <div class="mb-3">
+          <label for="selectAvaliador" class="form-label"
+            >Avaliador <span class="text-danger">*</span></label
+          >
+          <select
+            class="form-select"
+            id="selectAvaliador"
+            name="selectAvaliador"
+            [(ngModel)]="avaliadorSelecionadoId"
+            required
+          >
+            <option [value]="0" disabled>Selecione o avaliador...</option>
+            <option
+              *ngFor="let avaliador of avaliadoresDisponiveis"
+              [value]="avaliador.id"
+            >
+              {{ avaliador.nome }}
+            </option>
+          </select>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="notaAvaliacao" class="form-label"
+              >Nota (0 a 10) <span class="text-danger">*</span></label
+            >
+            <input
+              type="number"
+              class="form-control"
+              id="notaAvaliacao"
+              name="notaAvaliacao"
+              min="0"
+              max="10"
+              step="0.1"
+              [(ngModel)]="nota"
+              required
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="situacao" class="form-label"
+              >Situação <span class="text-danger">*</span></label
+            >
+            <select
+              class="form-select"
+              id="situacao"
+              name="situacao"
+              [(ngModel)]="situacao"
+              required
+            >
+              <option [value]="''" disabled>Selecione uma situação...</option>
+              <option *ngFor="let s of situacaoOptions" [value]="s">
+                {{ s | titlecase }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mb-3 mt-3">
+          <label for="parecerAvaliacao" class="form-label"
+            >Parecer Descritivo <span class="text-danger">*</span></label
+          >
+          <textarea
+            class="form-control"
+            id="parecerAvaliacao"
+            name="parecerAvaliacao"
+            rows="6"
+            [(ngModel)]="parecerDescritivo"
+            required
+            placeholder="Detalhe os pontos fortes, fracos e sugestões para o projeto..."
+          ></textarea>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2 mt-4">
+          <button type="button" class="btn btn-secondary" (click)="cancelarAvaliacao()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary">
+            Submeter Avaliação
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
