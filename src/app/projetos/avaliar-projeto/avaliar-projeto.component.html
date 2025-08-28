@@ -17,10 +17,10 @@
       </h2>
       <div class="row">
         <div class="col-md-6">
-          <p><strong>Área Temática:</strong> {{ projeto.areaTematica }}</p>
+          <p><strong>Área Temática:</strong> {{ formatAreaTematica(projeto.areaTematica) }}</p>
           <p>
             <strong>Prêmio Concorrendo:</strong>
-            {{ projeto.premio?.nome || 'Nenhum' }}
+            {{ projeto.premio.nome || 'Nenhum' }}
           </p>
           <p><strong>Autores:</strong> {{ formatarListaNomes(projeto.autores) }}</p>
         </div>
@@ -82,7 +82,7 @@
           </div>
           <div class="col-md-6">
             <label for="situacao" class="form-label"
-              >Situação <span class="text-danger">*</span></label
+              >Recomendação <span class="text-danger">*</span></label
             >
             <select
               class="form-select"
@@ -91,10 +91,11 @@
               [(ngModel)]="situacao"
               required
             >
-              <option [value]="''" disabled>Selecione uma situação...</option>
-              <option *ngFor="let s of situacaoOptions" [value]="s">
-                {{ s | titlecase }}
-              </option>
+              <option [value]="''" disabled>Selecione uma recomendação...</option>
+              <option [value]="SituacaoProjetoEnum.AVALIADO_APROVADO">Aprovar</option>
+              <option [value]="SituacaoProjetoEnum.PENDENTE_AJUSTES">Aprovar com Ressalvas</option>
+              <option [value]="SituacaoProjetoEnum.AVALIADO_REPROVADO">Rejeitar</option>
+              <option [value]="SituacaoProjetoEnum.PENDENTE_AJUSTES">Necessita Revisão / Mais Informações</option>
             </select>
           </div>
         </div>

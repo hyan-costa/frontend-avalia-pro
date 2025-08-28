@@ -38,9 +38,7 @@
             [(ngModel)]="novoProjeto.areaTematica"
             required
           >
-            <option *ngFor="let area of areaTematicaOptions" [value]="area">
-              {{ area | titlecase }}
-            </option>
+            <option *ngFor="let area of areaTematicaOptions" [value]="area.value">{{ area.label }}</option>
           </select>
         </div>
 
@@ -88,7 +86,9 @@
             [(ngModel)]="novoProjeto.premioId"
             required
           >
-            <option [value]="0" disabled selected>Selecione um prêmio...</option>
+            <option [value]="0" disabled selected>
+              Selecione um prêmio...
+            </option>
             <option *ngFor="let premio of premiosDisponiveis" [value]="premio.id">
               {{ premio.nome }} ({{ premio.anoEdicao }})
             </option>

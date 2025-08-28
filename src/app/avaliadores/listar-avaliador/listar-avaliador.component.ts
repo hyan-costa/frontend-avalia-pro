@@ -1,7 +1,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AvaliadorService } from '../avaliador.service';
 import { Avaliador, AreaEspecializacao } from '../../models/avaliador.model';
@@ -29,7 +29,7 @@ export class ListarAvaliadorComponent implements OnInit {
 
   areaEspecializacaoOptions = Object.values(AreaEspecializacao);
 
-  constructor(private avaliadorService: AvaliadorService) { }
+  constructor(private avaliadorService: AvaliadorService, private router: Router) { }
 
   ngOnInit(): void {
     this.loadAvaliadores();
@@ -90,24 +90,8 @@ export class ListarAvaliadorComponent implements OnInit {
   }
 
   visualizarDetalhesAvaliador(avaliadorId: number): void {
-    console.log('View details for avaliador:', avaliadorId);
+    this.router.navigate(['/avaliadores', avaliadorId]);
   }
 
-  editarAvaliador(avaliadorId: number): void {
-    console.log('Edit avaliador:', avaliadorId);
-  }
-
-  excluirAvaliador(avaliadorId: number): void {
-    if (confirm('Tem certeza que deseja excluir este avaliador?')) {
-      this.avaliadorService.deleteAvaliador(avaliadorId).subscribe({
-        next: () => {
-          console.log('Avaliador excluído com sucesso:', avaliadorId);
-          this.loadAvaliadores(); // Reload list after deletion
-        },
-        error: (err) => {
-          console.error('Error deleting avaliador:', err);
-        }
-      });
-    }
-  }
+  
 }

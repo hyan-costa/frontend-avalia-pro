@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators'; // Importar o operador map
 import { Autor } from '../models/autor.model';
 import { AuthService } from '../auth/auth.service';
 
@@ -9,7 +10,7 @@ import { AuthService } from '../auth/auth.service';
   providedIn: 'root'
 })
 export class AutorService {
-  private apiUrl = 'http://localhost:3000/autores'; // Base URL for author API
+  private apiUrl = 'http://localhost:3000/api/autores'; // Base URL for author API
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
@@ -47,7 +48,15 @@ export class AutorService {
     return this.http.get<any[]>(`${this.apiUrl}/${autorId}/projetos`, { headers: this.getHeaders() });
   }
 
+  countProjetosAutor(autorId: number): Observable<number> {
+    return this.http.get<{ count: number }>(`${this.apiUrl}/${autorId}/projetos/count`, { headers: this.getHeaders() }).pipe(
+      map(response => response.count)
+    );
+  }
+
   mediaNotasAutor(autorId: number): Observable<number> {
-    return this.http.post<number>(`${this.apiUrl}/${autorId}/projetos/media`, {}, { headers: this.getHeaders() });
+    return this.http.get<{ media: number }>(`${this.apiUrl}/${autorId}/projetos/media`, { headers: this.getHeaders() }).pipe(
+      map(response => response.media)
+    );
   }
 }

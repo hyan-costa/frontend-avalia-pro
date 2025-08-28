@@ -1,0 +1,110 @@
+<div class="container mt-4" *ngIf="avaliador">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center gap-3">
+      <button class="btn btn-secondary" (click)="goBack()">← Voltar</button>
+      <h1 class="h3 mb-0">Perfil do Avaliador</h1>
+    </div>
+    <button class="btn btn-primary" [routerLink]="['/avaliadores', avaliador.id, 'editar']">Editar</button>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="d-flex align-items-center gap-4 mb-4">
+            <div class="avatar-initials">
+              {{ getInitials(avaliador.nome) }}
+            </div>
+            <div>
+              <h2 class="h5 mb-0">{{ avaliador.nome }}</h2>
+              <p class="text-muted mb-1">{{ avaliador.areaAtuacao }}</p>
+              <span class="badge bg-success">Ativo</span>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <h5>Informações de Contato</h5>
+              <hr>
+              <p>📧 <strong>E-mail:</strong> {{ avaliador.email }}</p>
+              <p>📞 <strong>Telefone:</strong> {{ avaliador.telefone }}</p>
+              <p>🆔 <strong>CPF:</strong> {{ avaliador.cpf }}</p>
+            </div>
+            <div class="col-md-6">
+              <h5>Informações Profissionais</h5>
+              <hr>
+              <p>🎓 <strong>Instituição:</strong> {{ avaliador.instituicao }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Histórico de Avaliações</h5>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Projeto</th>
+                <th>Nota</th>
+                <th>Situação</th>
+                <th>Parecer</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let projeto of projetosAvaliados">
+                <td>{{ projeto.titulo }}</td>
+                <td>{{ projeto.nota }}</td>
+                <td>{{ projeto.situacao }}</td>
+                <td>{{ projeto.parecerDescritivo }}</td>
+              </tr>
+              <tr *ngIf="projetosAvaliados.length === 0">
+                <td colspan="4" class="text-center text-muted">Nenhum projeto avaliado ainda.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Áreas de Especialização</h5>
+          <div class="d-flex flex-wrap gap-2">
+            <span class="badge bg-primary">{{ avaliador.areaAtuacao }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Estatísticas</h5>
+          <hr>
+          <div class="space-y-4">
+            <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded-lg">
+              <div>
+                <p class="text-sm text-muted">Total de Avaliações</p>
+                <p class="h4 font-weight-bold text-primary" *ngIf="totalProjetos !== undefined">{{ totalProjetos }}</p>
+                <p class="h4 font-weight-bold text-primary" *ngIf="totalProjetos === undefined">Carregando...</p>
+              </div>
+              <div class="icon-circle bg-primary text-white">
+                📊
+              </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded-lg">
+              <div>
+                <p class="text-sm text-muted">Nota Média</p>
+                <p class="h4 font-weight-bold text-success" *ngIf="mediaNotas !== undefined">{{ mediaNotas | number:'1.1-1' }}</p>
+                <p class="h4 font-weight-bold text-success" *ngIf="mediaNotas === undefined">Carregando...</p>
+              </div>
+              <div class="icon-circle bg-success text-white">
+                ⭐
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

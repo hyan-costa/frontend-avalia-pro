@@ -1,7 +1,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProjetoService } from '../projeto.service';
 import { Projeto, AreaTematica, SituacaoProjeto } from '../../models/projeto.model';
@@ -28,7 +28,22 @@ export class ListarProjetosComponent implements OnInit {
   paginaAtual: number = 1;
   itensPorPagina: number = 5;
 
-  constructor(private projetoService: ProjetoService) { }
+  areaTematicaOptionsDisplay: { value: AreaTematica, label: string }[];
+
+  constructor(private projetoService: ProjetoService, private router: Router) {
+    this.areaTematicaOptionsDisplay = Object.values(AreaTematica).map(area => ({
+      value: area,
+      label: this.formatAreaTematica(area)
+    }));
+  }
+
+  public formatAreaTematica(area: AreaTematica): string {
+    return area.replace(/_/g, ' ')
+               .toLowerCase()
+               .split(' ')
+               .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
+               .join(' ');
+  }
 
   ngOnInit(): void {
     this.loadProjetos();
@@ -50,7 +65,7 @@ export class ListarProjetosComponent implements OnInit {
   aplicarFiltros(): void {
     this.projetosFiltrados = this.projetos.filter(projeto => {
       const matchTitulo = projeto.titulo.toLowerCase().includes(this.filtroTitulo.toLowerCase());
-      const matchArea = projeto.areaTematica.toLowerCase().includes(this.filtroAreaTematica.toLowerCase());
+      const matchArea = !this.filtroAreaTematica || projeto.areaTematica === this.filtroAreaTematica;
       const matchAutor = projeto.autores.some(autor => autor.nome.toLowerCase().includes(this.filtroAutor.toLowerCase()));
       const matchStatus = !this.filtroStatusProjeto || projeto.situacao === this.filtroStatusProjeto as SituacaoProjeto;
       const matchPremio = !this.filtroPremio || (projeto.premio && projeto.premio.nome.toLowerCase().includes(this.filtroPremio.toLowerCase()));
@@ -119,8 +134,7 @@ export class ListarProjetosComponent implements OnInit {
   }
 
   visualizarDetalhesProjeto(projetoId: number): void {
-    // Implement navigation to project details page
-    console.log('View details for project:', projetoId);
+    this.router.navigate(['/projetos', projetoId]);
   }
 
   editarProjeto(projetoId: number): void {

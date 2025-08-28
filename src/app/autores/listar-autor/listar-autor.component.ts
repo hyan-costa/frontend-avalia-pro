@@ -1,7 +1,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AutorService } from '../autor.service';
 import { Autor } from '../../models/autor.model';
@@ -26,7 +26,7 @@ export class ListarAutorComponent implements OnInit {
   paginaAtual: number = 1;
   itensPorPagina: number = 10;
 
-  constructor(private autorService: AutorService) { }
+  constructor(private autorService: AutorService, private router: Router) { }
 
   ngOnInit(): void {
     this.loadAutores();
@@ -85,7 +85,7 @@ export class ListarAutorComponent implements OnInit {
   }
 
   visualizarDetalhesAutor(autorId: number): void {
-    console.log('View details for autor:', autorId);
+    this.router.navigate(['/autores', autorId]);
   }
 
   editarAutor(autorId: number): void {

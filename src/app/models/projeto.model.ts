@@ -15,12 +15,14 @@ export enum AreaTematica {
 }
 
 export enum SituacaoProjeto {
-  SUBMETIDO = 'SUBMETIDO',
-  EM_AVALIACAO = 'EM_AVALIACAO',
-  AVALIADO_APROVADO = 'AVALIADO_APROVADO',
-  AVALIADO_REPROVADO = 'AVALIADO_REPROVADO',
-  PENDENTE_AJUSTES = 'PENDENTE_AJUSTES',
-  CONCLUIDO = 'CONCLUIDO',
+  SUBMETIDO = "Submetido",
+  EM_AVALIACAO = "Em Avaliação",
+  AVALIADO_APROVADO = "Avaliado - Aprovado",
+  AVALIADO_REPROVADO = "Avaliado - Reprovado",
+  PENDENTE_AJUSTES = "Pendente de Ajustes",
+  CONCLUIDO = "Concluido",
+  FINALIZADO = "Finalizado",
+  CANCELADO = "Cancelado",
 }
 
 export interface Projeto {

@@ -27,9 +27,22 @@ export class CriarAvaliadorComponent {
     status: true
   };
 
-  areaEspecializacaoOptions = Object.values(AreaEspecializacao);
+  areaEspecializacaoOptions: { value: AreaEspecializacao, label: string }[];
 
-  constructor(private avaliadorService: AvaliadorService, private router: Router) { }
+  constructor(private avaliadorService: AvaliadorService, private router: Router) {
+    this.areaEspecializacaoOptions = Object.values(AreaEspecializacao).map(area => ({
+      value: area,
+      label: this.formatAreaEspecializacao(area)
+    }));
+  }
+
+  private formatAreaEspecializacao(area: AreaEspecializacao): string {
+    return area.replace(/_/g, ' ')
+               .toLowerCase()
+               .split(' ')
+               .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
+               .join(' ');
+  }
 
   onCriarAvaliador(): void {
     this.avaliadorService.createAvaliador(this.novoAvaliador).subscribe({

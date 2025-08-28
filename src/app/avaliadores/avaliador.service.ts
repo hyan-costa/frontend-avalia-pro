@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators'; // Importar o operador map
 import { Avaliador } from '../models/avaliador.model';
 import { AuthService } from '../auth/auth.service';
 
@@ -9,7 +10,7 @@ import { AuthService } from '../auth/auth.service';
   providedIn: 'root'
 })
 export class AvaliadorService {
-  private apiUrl = 'http://localhost:3000/avaliadores'; // Base URL for avaliador API
+  private apiUrl = 'http://localhost:3000/api/avaliadores'; // Base URL for avaliador API
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
@@ -44,7 +45,9 @@ export class AvaliadorService {
 
   // Specific Operations
   countProjetosAvaliador(avaliadorId: number): Observable<number> {
-    return this.http.get<number>(`${this.apiUrl}/${avaliadorId}/projetos/count`, { headers: this.getHeaders() });
+    return this.http.get<{ count: number }>(`${this.apiUrl}/${avaliadorId}/projetos/count`, { headers: this.getHeaders() }).pipe(
+      map(response => response.count)
+    );
   }
 
   getProjetosAvaliador(avaliadorId: number): Observable<any[]> {
@@ -52,6 +55,8 @@ export class AvaliadorService {
   }
 
   mediaNotasAvaliador(avaliadorId: number): Observable<number> {
-    return this.http.get<number>(`${this.apiUrl}/${avaliadorId}/projetos/media`, { headers: this.getHeaders() });
+    return this.http.get<{ media: number }>(`${this.apiUrl}/${avaliadorId}/projetos/media`, { headers: this.getHeaders() }).pipe(
+      map(response => response.media)
+    );
   }
 }

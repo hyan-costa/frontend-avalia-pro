@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProjetoService } from '../projeto.service';
 import { AvaliadorService } from '../../avaliadores/avaliador.service';
-import { Projeto, SituacaoProjeto } from '../../models/projeto.model';
+import { Projeto, SituacaoProjeto, AreaTematica } from '../../models/projeto.model';
 import { Avaliador } from '../../models/avaliador.model';
 
 @Component({
@@ -22,10 +22,17 @@ export class AvaliarProjetoComponent implements OnInit {
 
   nota: number = 0;
   parecerDescritivo: string = '';
-  situacao: SituacaoProjeto = SituacaoProjeto.EM_AVALIACAO; // Default or initial state
+  situacao: SituacaoProjeto | '' = ''; // Changed to allow empty string for initial selection
   avaliadorSelecionadoId: number = 0;
 
-  situacaoOptions = Object.values(SituacaoProjeto);
+  // Only include relevant SituacaoProjeto values for evaluation recommendations
+  situacaoOptions: SituacaoProjeto[] = [
+    SituacaoProjeto.AVALIADO_APROVADO,
+    SituacaoProjeto.AVALIADO_REPROVADO,
+    SituacaoProjeto.PENDENTE_AJUSTES,
+  ];
+
+  SituacaoProjetoEnum = SituacaoProjeto;
 
   constructor(
     private route: ActivatedRoute,
@@ -33,6 +40,14 @@ export class AvaliarProjetoComponent implements OnInit {
     private projetoService: ProjetoService,
     private avaliadorService: AvaliadorService
   ) { }
+
+  formatAreaTematica(area: AreaTematica): string {
+    return area.replace(/_/g, ' ')
+               .toLowerCase()
+               .split(' ')
+               .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
+               .join(' ');
+  }
 
   ngOnInit(): void {
     this.projetoId = Number(this.route.snapshot.paramMap.get('id'));
@@ -76,26 +91,19 @@ export class AvaliarProjetoComponent implements OnInit {
       return;
     }
 
-    // Update the project with the selected avaliadorId before sending the evaluation
-    const updateData: Partial<Projeto> = {
-      avaliadorId: this.avaliadorSelecionadoId
-    };
-
-    this.projetoService.updateProjeto(this.projetoId, updateData).subscribe({
-      next: () => {
-        this.projetoService.evaluateProjeto(this.projetoId, this.nota, this.parecerDescritivo, this.situacao).subscribe({
-          next: (projetoAtualizado) => {
-            console.log('Projeto avaliado com sucesso:', projetoAtualizado);
-            this.router.navigate(['/projetos']); // Navigate back to projects list
-          },
-          error: (err) => {
-            console.error('Erro ao avaliar projeto:', err);
-            // Handle error
-          }
-        });
+    this.projetoService.evaluateProjeto(
+      this.projetoId,
+      this.nota,
+      this.parecerDescritivo,
+      this.situacao as SituacaoProjeto, // Cast to SituacaoProjeto
+      this.avaliadorSelecionadoId
+    ).subscribe({
+      next: (projetoAtualizado) => {
+        console.log('Projeto avaliado com sucesso:', projetoAtualizado);
+        this.router.navigate(['/projetos']); // Navigate back to projects list
       },
       error: (err) => {
-        console.error('Erro ao atualizar avaliador do projeto:', err);
+        console.error('Erro ao avaliar projeto:', err);
         // Handle error
       }
     });

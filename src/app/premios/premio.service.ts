@@ -9,7 +9,7 @@ import { AuthService } from '../auth/auth.service';
   providedIn: 'root'
 })
 export class PremioService {
-  private apiUrl = 'http://localhost:3000/premios'; // Base URL for premio API
+  private apiUrl = 'http://localhost:3000/api/premios'; // Base URL for premio API
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 

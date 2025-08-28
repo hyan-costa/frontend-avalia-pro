@@ -2,6 +2,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -13,13 +15,22 @@ import { FormsModule } from '@angular/forms';
 export class LoginComponent {
   username = '';
   password = '';
+  loginError = '';
 
-  constructor() { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void { }
 
   onLogin(): void {
-    console.log('Login attempt:', this.username, this.password);
-    // Implement authentication logic here
+    this.authService.login(this.username, this.password).subscribe({
+      next: (response) => {
+        console.log('Login successful', response);
+        this.router.navigate(['/projetos']);
+      },
+      error: (error) => {
+        console.error('Login failed', error);
+        this.loginError = 'Usuário ou senha inválidos.';
+      }
+    });
   }
 }

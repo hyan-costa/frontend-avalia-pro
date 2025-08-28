@@ -21,13 +21,16 @@
           />
         </div>
         <div class="col-md-6 col-lg-4">
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Por área temática"
+          <select
+            class="form-select"
             [(ngModel)]="filtroAreaTematica"
-            (input)="aplicarFiltros()"
-          />
+            (change)="aplicarFiltros()"
+          >
+            <option value="">Todas as Áreas Temáticas</option>
+            <option *ngFor="let area of areaTematicaOptionsDisplay" [value]="area.value">
+              {{ area.label }}
+            </option>
+          </select>
         </div>
         <div class="col-md-6 col-lg-4">
           <input
@@ -100,7 +103,7 @@
             </tr>
             <tr *ngFor="let projeto of projetosPaginados">
               <td>{{ projeto.titulo }}</td>
-              <td>{{ projeto.areaTematica }}</td>
+              <td>{{ formatAreaTematica(projeto.areaTematica) }}</td>
               <td>{{ formatarListaAutores(projeto.autores) }}</td>
               <td class="text-center">
                 {{ formatarDataSimples(projeto.dataCadastro) }}
@@ -108,19 +111,13 @@
               <td>
                 <span [innerHTML]="getProjectStatusBadge(projeto.situacao)"></span>
               </td>
-              <td>{{ projeto.premio?.nome || 'Nenhum' }}</td>
+              <td>{{ projeto.premio.nome || 'Nenhum' }}</td>
               <td>
                 <button
                   class="btn btn-sm btn-info me-2"
                   (click)="visualizarDetalhesProjeto(projeto.id)"
                 >
                   Detalhes
-                </button>
-                <button
-                  class="btn btn-sm btn-warning"
-                  (click)="editarProjeto(projeto.id)"
-                >
-                  Editar
                 </button>
               </td>
             </tr>

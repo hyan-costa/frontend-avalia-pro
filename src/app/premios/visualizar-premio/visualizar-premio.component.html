@@ -1,0 +1,67 @@
+<div class="container mt-4" *ngIf="premio">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center gap-3">
+      <button class="btn btn-secondary" (click)="goBack()">← Voltar</button>
+      <h1 class="h3 mb-0">Detalhes do Prêmio</h1>
+    </div>
+    <button class="btn btn-primary" [routerLink]="['/premios', premio.id, 'editar']">Editar Prêmio</button>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="mb-4">
+            <h2 class="h4 text-primary">{{ premio.nome }}</h2>
+            <div class="d-flex align-items-center gap-3 mt-2">
+              <span class="text-lg text-muted">Edição {{ premio.anoEdicao }}</span>
+              <span class="badge" [ngClass]="getStatusClass(premio)">{{ getStatus(premio) }}</span>
+            </div>
+          </div>
+          
+          <div>
+            <h5 class="card-title">Descrição</h5>
+            <p class="text-muted">{{ premio.descricao }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Cronograma da Edição</h5>
+          <hr>
+          <p><strong>Data de Início:</strong> {{ premio.dataInicio | date:'dd/MM/yyyy' }}</p>
+          <p><strong>Data de Fim:</strong> {{ premio.dataFim | date:'dd/MM/yyyy' }}</p>
+          <p><strong>Detalhes do Cronograma:</strong> {{ premio.detalheCronograma }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Resumo</h5>
+          <hr>
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span>Ano da Edição:</span>
+            <span class="fw-bold">{{ premio.anoEdicao }}</span>
+          </div>
+          <div class="d-flex justify-content-between align-items-center">
+            <span>Status Atual:</span>
+            <span class="fw-bold" [ngClass]="getStatusClass(premio)">{{ getStatus(premio) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Ações Relacionadas</h5>
+          <hr>
+          <div class="d-grid gap-2">
+            <button class="btn btn-success" [routerLink]="['/premios', premio.id, 'projetos']">Ver Projetos Inscritos</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { Usuario } from '../models/usuario.model';
 
@@ -9,7 +9,7 @@ import { Usuario } from '../models/usuario.model';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000'; // Replace with your backend API URL
+  private apiUrl = 'http://localhost:3000/api'; // Replace with your backend API URL
   private tokenKey = 'authToken';
 
   constructor(private http: HttpClient) { }
@@ -51,7 +51,7 @@ export class AuthService {
       // TODO: send the error to remote logging infrastructure
 
       // Let the app keep running by returning an empty result.
-      return of(result as T);
+      return throwError(() => error);
     };
   }
 }

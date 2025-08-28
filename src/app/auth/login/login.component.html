@@ -7,6 +7,9 @@
           <h3>Login</h3>
         </div>
         <div class="card-body">
+          <div *ngIf="loginError" class="alert alert-danger">
+            {{ loginError }}
+          </div>
           <form (ngSubmit)="onLogin()">
             <div class="mb-3">
               <label for="username" class="form-label">Email</label>

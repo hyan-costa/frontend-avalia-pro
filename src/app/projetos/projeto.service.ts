@@ -9,7 +9,7 @@ import { AuthService } from '../auth/auth.service';
   providedIn: 'root'
 })
 export class ProjetoService {
-  private apiUrl = 'http://localhost:3000/projetos'; // Base URL for project API
+  private apiUrl = 'http://localhost:3000/api/projetos'; // Base URL for project API
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
@@ -43,10 +43,10 @@ export class ProjetoService {
   }
 
   // Specific Operations
-  evaluateProjeto(id: number, nota: number, parecerDescritivo: string, situacao: SituacaoProjeto): Observable<Projeto> {
+  evaluateProjeto(id: number, nota: number, parecerDescritivo: string, situacao: SituacaoProjeto, avaliadorId: number): Observable<Projeto> {
     return this.http.patch<Projeto>(
       `${this.apiUrl}/${id}/avaliar`,
-      { nota, parecerDescritivo, situacao },
+      { nota, parecerDescritivo, situacao, avaliadorId },
       { headers: this.getHeaders() }
     );
   }

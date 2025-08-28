@@ -29,7 +29,7 @@ export class CriarProjetoComponent implements OnInit {
 
   autoresDisponiveis: Autor[] = [];
   premiosDisponiveis: Premio[] = [];
-  areaTematicaOptions = Object.values(AreaTematica);
+  areaTematicaOptions: { value: AreaTematica, label: string }[];
   situacaoProjetoOptions = Object.values(SituacaoProjeto);
 
   constructor(
@@ -37,7 +37,20 @@ export class CriarProjetoComponent implements OnInit {
     private autorService: AutorService, // Inject AutorService
     private premioService: PremioService, // Inject PremioService
     private router: Router
-  ) { }
+  ) {
+    this.areaTematicaOptions = Object.values(AreaTematica).map(area => ({
+      value: area,
+      label: this.formatAreaTematica(area)
+    }));
+  }
+
+  private formatAreaTematica(area: AreaTematica): string {
+    return area.replace(/_/g, ' ')
+               .toLowerCase()
+               .split(' ')
+               .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
+               .join(' ');
+  }
 
   ngOnInit(): void {
     this.loadAutores();

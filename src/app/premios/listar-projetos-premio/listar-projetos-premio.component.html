@@ -1,0 +1,57 @@
+<div class="container mt-5">
+  <div class="d-flex align-items-center mb-4">
+    <button (click)="goBack()" class="btn btn-secondary me-3">
+      <i class="bi bi-arrow-left"></i> Voltar
+    </button>
+    <h1 class="text-3xl font-bold text-gray-800">Projetos Vinculados ao Prêmio: {{ premio?.nome }} ({{ premio?.anoEdicao }})</h1>
+  </div>
+
+  <div class="mb-3">
+    <span class="text-muted">{{ projetos.length }} projeto(s) encontrado(s).</span>
+  </div>
+
+  <div class="card">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover mb-0">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Área Temática</th>
+              <th>Autores</th>
+              <th>Situação</th>
+              <th>Nota</th>
+              <th>Parecer Descritivo</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="projetos.length === 0">
+              <td colspan="7" class="text-center text-muted py-4">
+                Nenhum projeto encontrado para este prêmio.
+              </td>
+            </tr>
+            <tr *ngFor="let projeto of projetos">
+              <td>{{ projeto.titulo }}</td>
+              <td>{{ projeto.areaTematica }}</td>
+              <td>{{ formatarListaAutores(projeto.autores) }}</td>
+              <td>
+                <span [innerHTML]="getProjectStatusBadge(projeto.situacao)"></span>
+              </td>
+              <td>{{ projeto.nota !== null && projeto.nota !== undefined ? projeto.nota : 'N/A' }}</td>
+              <td>{{ projeto.parecerDescritivo || 'N/A' }}</td>
+              <td>
+                <button
+                  class="btn btn-sm btn-info me-2"
+                  (click)="visualizarDetalhesProjeto(projeto.id)"
+                >
+                  Detalhes
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

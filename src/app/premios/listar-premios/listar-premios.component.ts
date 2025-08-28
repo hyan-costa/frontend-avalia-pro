@@ -1,7 +1,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { PremioService } from '../premio.service';
 import { Premio } from '../../models/premio.model';
@@ -16,16 +16,18 @@ import { Premio } from '../../models/premio.model';
 export class ListarPremiosComponent implements OnInit {
   premios: Premio[] = [];
   premiosFiltrados: Premio[] = [];
-  
+
   // Filters
   filtroNome: string = '';
   filtroAnoEdicao: number | null = null;
+  filtroStatus: string = '';
+  statusList: string[] = ['Ativo', 'Inativo']; // Simplificado
 
   // Pagination
   paginaAtual: number = 1;
   itensPorPagina: number = 10;
 
-  constructor(private premioService: PremioService) { }
+  constructor(private premioService: PremioService, private router: Router) { }
 
   ngOnInit(): void {
     this.loadPremios();
@@ -47,8 +49,12 @@ export class ListarPremiosComponent implements OnInit {
     this.premiosFiltrados = this.premios.filter(premio => {
       const matchNome = premio.nome.toLowerCase().includes(this.filtroNome.toLowerCase());
       const matchAnoEdicao = this.filtroAnoEdicao === null || premio.anoEdicao === this.filtroAnoEdicao;
-      
-      return matchNome && matchAnoEdicao;
+
+      // Lógica de filtro de status ajustada
+      const statusBooleano = this.filtroStatus === 'Ativo' ? true : (this.filtroStatus === 'Inativo' ? false : null);
+      const matchStatus = this.filtroStatus === '' || premio.status === statusBooleano;
+
+      return matchNome && matchAnoEdicao && matchStatus;
     });
     this.paginaAtual = 1;
   }
@@ -56,6 +62,7 @@ export class ListarPremiosComponent implements OnInit {
   limparFiltros(): void {
     this.filtroNome = '';
     this.filtroAnoEdicao = null;
+    this.filtroStatus = '';
     this.aplicarFiltros();
   }
 
@@ -71,7 +78,7 @@ export class ListarPremiosComponent implements OnInit {
 
   paginaAnterior(): void {
     if (this.paginaAtual > 1) {
-      this.paginaAtual--;
+      this.paginaAtual--
     }
   }
 
@@ -87,36 +94,12 @@ export class ListarPremiosComponent implements OnInit {
     return data.toLocaleDateString('pt-BR');
   }
 
+  // Lógica de status simplificada
   getStatusPremio(premio: Premio): string {
-    const hoje = new Date();
-    const inicio = new Date(premio.dataInicio);
-    const fim = new Date(premio.dataFim);
-
-    if (!premio.status) return 'Inativo';
-    if (hoje < inicio) return 'Futuro';
-    if (hoje >= inicio && hoje <= fim) return 'Em Andamento';
-    return 'Encerrado';
+    return premio.status ? 'Ativo' : 'Inativo';
   }
 
   visualizarDetalhesPremio(premioId: number): void {
-    console.log('View details for premio:', premioId);
-  }
-
-  editarPremio(premioId: number): void {
-    console.log('Edit premio:', premioId);
-  }
-
-  excluirPremio(premioId: number): void {
-    if (confirm('Tem certeza que deseja excluir este prêmio? Isso também inativará todos os projetos vinculados.')) {
-      this.premioService.deletePremio(premioId).subscribe({
-        next: () => {
-          console.log('Premio excluído com sucesso:', premioId);
-          this.loadPremios();
-        },
-        error: (err) => {
-          console.error('Error deleting premio:', err);
-        }
-      });
-    }
+    this.router.navigate(['/premios', premioId]);
   }
 }

@@ -1,8 +1,7 @@
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ProjetoService } from '../projeto.service';
 import { AutorService } from '../../autores/autor.service';
 import { PremioService } from '../../premios/premio.service';
@@ -17,56 +16,60 @@ import { Avaliador } from '../../models/avaliador.model';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './editar-projeto.component.html',
-  styleUrl: './editar-projeto.component.scss'
+  styleUrls: ['./editar-projeto.component.scss']
 })
 export class EditarProjetoComponent implements OnInit {
-  projetoId: number = 0;
-  projetoAtual: Partial<Projeto> = {};
+  projetoForm: any = {}; // Usaremos 'any' para flexibilidade com autorIds e outros campos
+  projetoId: number | null = null;
 
   autoresDisponiveis: Autor[] = [];
   premiosDisponiveis: Premio[] = [];
   avaliadoresDisponiveis: Avaliador[] = [];
 
-  areaTematicaOptions = Object.values(AreaTematica);
+  areaTematicaOptions: { value: AreaTematica, label: string }[];
   situacaoProjetoOptions = Object.values(SituacaoProjeto);
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
     private projetoService: ProjetoService,
     private autorService: AutorService,
     private premioService: PremioService,
-    private avaliadorService: AvaliadorService
-  ) { }
-
-  ngOnInit(): void {
-    this.projetoId = Number(this.route.snapshot.paramMap.get('id'));
-    if (this.projetoId) {
-      this.loadProjeto();
-      this.loadAutores();
-      this.loadPremios();
-      this.loadAvaliadores();
-    }
+    private avaliadorService: AvaliadorService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
+    this.areaTematicaOptions = Object.values(AreaTematica).map(area => ({
+      value: area,
+      label: this.formatAreaTematica(area)
+    }));
   }
 
-  loadProjeto(): void {
-    this.projetoService.getProjetoById(this.projetoId).subscribe({
-      next: (data) => {
-        this.projetoAtual = { ...data }; // Copy data to avoid direct mutation
-        // Convert Date objects if necessary for date inputs
-        if (this.projetoAtual.dataCadastro) {
-          this.projetoAtual.dataCadastro = new Date(this.projetoAtual.dataCadastro);
-        }
-        // Pre-select authors
-        if (this.projetoAtual.autores) {
-          this.projetoAtual.autores = this.autoresDisponiveis.filter(autor => 
-            this.projetoAtual.autores?.some(pa => pa.id === autor.id)
-          );
-        }
-      },
-      error: (err) => {
-        console.error('Error loading projeto:', err);
-        this.router.navigate(['/projetos']);
+  private formatAreaTematica(area: AreaTematica): string {
+    return area.replace(/_/g, ' ')
+               .toLowerCase()
+               .split(' ')
+               .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
+               .join(' ');
+  }
+
+  ngOnInit(): void {
+    this.loadAutores();
+    this.loadPremios();
+    this.loadAvaliadores();
+
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if (id) {
+        this.projetoId = +id;
+        this.projetoService.getProjetoById(this.projetoId).subscribe(data => {
+          this.projetoForm = {
+            ...data,
+            // Mapeia os objetos Autor para apenas seus IDs para o formulário
+            autorIds: data.autores ? data.autores.map(autor => autor.id) : [],
+            // Garante que premioId e avaliadorId sejam números ou null
+            premioId: data.premioId || null,
+            avaliadorId: data.avaliadorId || null,
+          };
+        });
       }
     });
   }
@@ -75,12 +78,6 @@ export class EditarProjetoComponent implements OnInit {
     this.autorService.getAutores().subscribe({
       next: (data) => {
         this.autoresDisponiveis = data;
-        // Re-select authors after available authors are loaded
-        if (this.projetoAtual.autores) {
-          this.projetoAtual.autores = this.autoresDisponiveis.filter(autor => 
-            this.projetoAtual.autores?.some(pa => pa.id === autor.id)
-          );
-        }
       },
       error: (err) => {
         console.error('Error loading autores:', err);
@@ -91,7 +88,7 @@ export class EditarProjetoComponent implements OnInit {
   loadPremios(): void {
     this.premioService.getPremios().subscribe({
       next: (data) => {
-        this.premiosDisponiveis = data.filter(premio => premio.status);
+        this.premiosDisponiveis = data.filter(premio => premio.status); // Apenas prêmios ativos
       },
       error: (err) => {
         console.error('Error loading premios:', err);
@@ -102,7 +99,7 @@ export class EditarProjetoComponent implements OnInit {
   loadAvaliadores(): void {
     this.avaliadorService.getAvaliadores().subscribe({
       next: (data) => {
-        this.avaliadoresDisponiveis = data.filter(av => av.status);
+        this.avaliadoresDisponiveis = data.filter(avaliador => avaliador.status); // Apenas avaliadores ativos
       },
       error: (err) => {
         console.error('Error loading avaliadores:', err);
@@ -111,37 +108,32 @@ export class EditarProjetoComponent implements OnInit {
   }
 
   onSalvarProjeto(): void {
-    if (!this.projetoAtual.titulo || !this.projetoAtual.areaTematica || !this.projetoAtual.resumo || 
-        !this.projetoAtual.autores || this.projetoAtual.autores.length === 0 || !this.projetoAtual.premioId || 
-        !this.projetoAtual.situacao) {
-      alert('Por favor, preencha todos os campos obrigatórios.');
-      return;
-    }
+    if (!this.projetoId) return;
 
-    const autorIds = this.projetoAtual.autores?.map(autor => autor.id) || [];
-
-    const projetoToUpdate = {
-      ...this.projetoAtual,
-      autorIds: autorIds,
-      // Ensure dataCadastro is a Date object if needed by backend, or string
-      dataCadastro: this.projetoAtual.dataCadastro ? new Date(this.projetoAtual.dataCadastro) : undefined
+    // O payload deve corresponder ao UpdateProjetoDTO
+    const payload = {
+      ...this.projetoForm,
+      // Garante que autorIds seja um array de números
+      autorIds: this.projetoForm.autorIds || [],
+      // Garante que premioId e avaliadorId sejam números ou null/undefined
+      premioId: this.projetoForm.premioId === null ? undefined : this.projetoForm.premioId,
+      avaliadorId: this.projetoForm.avaliadorId === null ? undefined : this.projetoForm.avaliadorId,
     };
 
-    this.projetoService.updateProjeto(this.projetoId, projetoToUpdate).subscribe({
-      next: (projeto) => {
-        console.log('Projeto atualizado com sucesso:', projeto);
-        this.router.navigate(['/projetos', this.projetoId]); // Navigate to details page
+    this.projetoService.updateProjeto(this.projetoId, payload).subscribe({
+      next: (projetoAtualizado) => {
+        console.log('Projeto atualizado com sucesso:', projetoAtualizado);
+        this.router.navigate(['/projetos', this.projetoId]);
       },
       error: (err) => {
         console.error('Erro ao atualizar projeto:', err);
-        // Handle error
       }
     });
   }
 
   cancelarEdicao(): void {
     if (confirm('Tem certeza que deseja cancelar a edição? As alterações não salvas serão perdidas.')) {
-      this.router.navigate(['/projetos', this.projetoId]); // Navigate back to details page
+      this.router.navigate(['/projetos', this.projetoId]);
     }
   }
 }
