@@ -19,9 +19,11 @@ import { EditarPremioComponent } from './premios/editar-premio/editar-premio.com
 import { EditarAvaliadorComponent } from './avaliadores/editar-avaliador/editar-avaliador.component';
 import { EditarAutorComponent } from './autores/editar-autor/editar-autor.component';
 import { ListarProjetosPremioComponent } from './premios/listar-projetos-premio/listar-projetos-premio.component';
+import { RegisterComponent } from './auth/register/register.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
   { path: '', redirectTo: '/projetos', pathMatch: 'full' },
   { path: 'projetos', component: ListarProjetosComponent, canActivate: [AuthGuard] },
   { path: 'projetos/criar', component: CriarProjetoComponent, canActivate: [AuthGuard] },

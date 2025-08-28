@@ -19,7 +19,7 @@ export class App {
     this.router.events.pipe(
       filter((event): event is NavigationEnd => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
-      this.isLoginPage = event.url === '/login';
+      this.isLoginPage = event.url === '/login' || event.url === '/register';
     });
   }
 }

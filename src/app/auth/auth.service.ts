@@ -24,6 +24,12 @@ export class AuthService {
     );
   }
 
+  register(nome: string, email: string, password: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/users`, { nome, email, password }).pipe(
+      catchError(this.handleError<any>('register'))
+    );
+  }
+
   logout(): void {
     this.removeToken();
     // Optionally clear user data
